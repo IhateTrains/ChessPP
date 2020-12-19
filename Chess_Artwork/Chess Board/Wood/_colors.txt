@@ -1,0 +1,2 @@
+white #ffe4b5
+black #863e18

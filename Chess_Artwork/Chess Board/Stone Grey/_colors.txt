@@ -1,0 +1,2 @@
+white #f0f0f0
+black #474746
