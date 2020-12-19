@@ -40,7 +40,7 @@ public:
         centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
         gridLayoutWidget = new QWidget(centralwidget);
         gridLayoutWidget->setObjectName(QString::fromUtf8("gridLayoutWidget"));
-        gridLayoutWidget->setGeometry(QRect(90, 40, 641, 671));
+        gridLayoutWidget->setGeometry(QRect(90, 20, 641, 671));
         gridLayout = new QGridLayout(gridLayoutWidget);
         gridLayout->setObjectName(QString::fromUtf8("gridLayout"));
         gridLayout->setSizeConstraint(QLayout::SetDefaultConstraint);
@@ -51,7 +51,7 @@ public:
         label->setPixmap(QPixmap(QString::fromUtf8("../Chess_Artwork/Chess Board/Wood/border_left_legend.png")));
         label_2 = new QLabel(centralwidget);
         label_2->setObjectName(QString::fromUtf8("label_2"));
-        label_2->setGeometry(QRect(90, 20, 641, 20));
+        label_2->setGeometry(QRect(90, 691, 641, 21));
         label_2->setPixmap(QPixmap(QString::fromUtf8("../Chess_Artwork/Chess Board/Wood/border_bottom_legend.png")));
         MainWindow->setCentralWidget(centralwidget);
         menubar = new QMenuBar(MainWindow);
