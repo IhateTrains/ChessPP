@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1007</width>
-    <height>767</height>
+    <height>719</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,24 +17,24 @@
    <widget class="QWidget" name="gridLayoutWidget">
     <property name="geometry">
      <rect>
-      <x>90</x>
-      <y>30</y>
-      <width>641</width>
-      <height>661</height>
+      <x>30</x>
+      <y>20</y>
+      <width>640</width>
+      <height>640</height>
      </rect>
     </property>
-    <layout class="QGridLayout" name="gridLayout">
+    <layout class="QGridLayout" name="board">
      <property name="sizeConstraint">
       <enum>QLayout::SetDefaultConstraint</enum>
      </property>
     </layout>
    </widget>
-   <widget class="QLabel" name="label">
+   <widget class="QLabel" name="background">
     <property name="geometry">
      <rect>
-      <x>70</x>
-      <y>30</y>
-      <width>21</width>
+      <x>10</x>
+      <y>-2</y>
+      <width>681</width>
       <height>681</height>
      </rect>
     </property>
@@ -42,25 +42,11 @@
      <string/>
     </property>
     <property name="pixmap">
-     <pixmap>../Chess_Artwork/Chess Board/Wood/border_left_legend.png</pixmap>
+     <pixmap>../Chess_Artwork/Chess Board/Wood/Chess_Board.png</pixmap>
     </property>
    </widget>
-   <widget class="QLabel" name="label_2">
-    <property name="geometry">
-     <rect>
-      <x>90</x>
-      <y>691</y>
-      <width>641</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-    <property name="pixmap">
-     <pixmap>../Chess_Artwork/Chess Board/Wood/border_bottom_legend.png</pixmap>
-    </property>
-   </widget>
+   <zorder>background</zorder>
+   <zorder>gridLayoutWidget</zorder>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -71,6 +57,12 @@
      <height>21</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menuMenu">
+    <property name="title">
+     <string>Menu</string>
+    </property>
+   </widget>
+   <addaction name="menuMenu"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>

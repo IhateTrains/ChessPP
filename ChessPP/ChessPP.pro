@@ -9,11 +9,17 @@ CONFIG += c++11
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    board.cpp \
+    clickablelabel.cpp \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    piece.cpp
 
 HEADERS += \
-    mainwindow.h
+    board.h \
+    clickablelabel.h \
+    mainwindow.h \
+    piece.h
 
 FORMS += \
     mainwindow.ui
@@ -28,3 +34,6 @@ DISTFILES += \
     ../Chess_Artwork/Chess Board/Wood/border_bottom_legend.png \
     ../Chess_Artwork/Chess Board/Wood/border_left_legend.png \
     ../Chess_Artwork/Chess Board/Wood/border_left_legend.png
+
+RESOURCES += \
+    resources.qrc
