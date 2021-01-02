@@ -13,24 +13,30 @@
 #include <QWidget>
 #include <Qt>
 #include "piece.h"
+#include <memory>
 
 
 class ClickableSquare : public QLabel { // A QLabel, but clickable.
     Q_OBJECT
 
 public:
-    explicit ClickableSquare(QWidget* parent = Q_NULLPTR, Qt::WindowFlags f = Qt::WindowFlags());
+    explicit ClickableSquare(const QString& defaultStyle, QWidget* parent = Q_NULLPTR, Qt::WindowFlags f = Qt::WindowFlags());
     ~ClickableSquare();
 
     [[nodiscard]] bool containsPiece() const;
+
+    [[nodiscard]] const auto& getPiece() const { return piece; }
+    void setPiece(const std::shared_ptr<Piece>& _piece) { piece = _piece; }
+
     void setStyle(const QString& style);
+    void resetStyle() { currentStyle = defaultStyle; setStyle(currentStyle); }
     const QString& getStyle() const;
 
-    QString defaultStyle;
-    Piece* piece = nullptr;
 
 private:
     QString currentStyle;
+    QString defaultStyle;
+    std::shared_ptr<Piece> piece = nullptr;
 
 signals:
     void clicked(ClickableSquare* ptr);

@@ -3,11 +3,13 @@
 
 #include "piece.h"
 
-class Rook : public Piece
+class Rook final: public Piece
 {
 public:
-    Rook();
-    std::string getImagePath();
+    Rook(unsigned short x, unsigned short y, PieceColor color, std::shared_ptr<Board> board): Piece(x, y, color, board){};
+
+    [[nodiscard]] const std::string getImagePath() const;
+    [[nodiscard]] const std::vector<Location>& getLegalMoves();
 };
 
 #endif // ROOK_H

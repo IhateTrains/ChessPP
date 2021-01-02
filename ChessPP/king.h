@@ -3,11 +3,11 @@
 
 #include "piece.h"
 
-class King : public Piece
+class King final: public Piece
 {
 public:
-    King();
-    std::string getImagePath();
+    King(unsigned short x, unsigned short y, PieceColor color, std::shared_ptr<Board> board): Piece(x, y, color, board){};
+    [[nodiscard]] const std::string getImagePath() const;
 };
 
 #endif // KING_H

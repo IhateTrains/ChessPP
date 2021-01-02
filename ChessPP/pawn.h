@@ -3,11 +3,17 @@
 
 #include "piece.h"
 
-class Pawn : public Piece
+class Pawn final: public Piece
 {
 public:
-    Pawn();
-    std::string getImagePath();
+    Pawn(unsigned short x, unsigned short y, PieceColor color, std::shared_ptr<Board> board): Piece(x, y, color, board){};
+
+    [[nodiscard]] const std::string getImagePath() const;
+    [[nodiscard]] bool isLongMovePossible() const { return firstMove; }
+    [[nodiscard]] const std::vector<Location>& getLegalMoves();
+
+private:
+    bool firstMove = true;
 };
 
 #endif // PAWN_H

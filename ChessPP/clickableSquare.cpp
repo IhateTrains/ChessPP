@@ -1,7 +1,10 @@
 #include "clickableSquare.h"
 
-ClickableSquare::ClickableSquare(QWidget* parent, Qt::WindowFlags f)
-    : QLabel(parent) {}
+ClickableSquare::ClickableSquare(const QString& defaultStyle, QWidget* parent, Qt::WindowFlags f)
+    : QLabel(parent), currentStyle(defaultStyle), defaultStyle(defaultStyle)
+{
+    setStyleSheet(defaultStyle);
+}
 
 ClickableSquare::~ClickableSquare() {}
 
@@ -11,8 +14,8 @@ void ClickableSquare::mousePressEvent(QMouseEvent* event) {
 
 bool ClickableSquare::containsPiece() const
 {
-    if (piece) return true;
-    return false;
+    if (piece == nullptr) return false;
+    return true;
 }
 
 void ClickableSquare::setStyle(const QString& style)

@@ -3,11 +3,11 @@
 
 #include "piece.h"
 
-class Bishop : public Piece
+class Bishop final: public Piece
 {
 public:
-    Bishop();
-    std::string getImagePath();
+    Bishop(unsigned short x, unsigned short y, PieceColor color, std::shared_ptr<Board> board): Piece(x, y, color, board){};
+    [[nodiscard]] const std::string getImagePath() const;
 };
 
 #endif // BISHOP_H
