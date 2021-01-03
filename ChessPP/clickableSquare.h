@@ -20,23 +20,30 @@ class ClickableSquare : public QLabel { // A QLabel, but clickable.
     Q_OBJECT
 
 public:
-    explicit ClickableSquare(const QString& defaultStyle, QWidget* parent = Q_NULLPTR, Qt::WindowFlags f = Qt::WindowFlags());
+    explicit ClickableSquare(unsigned short x, unsigned short y, const QString& defaultStyle, QWidget* parent = Q_NULLPTR, Qt::WindowFlags f = Qt::WindowFlags());
     ~ClickableSquare();
 
     [[nodiscard]] bool containsPiece() const;
 
     [[nodiscard]] const auto& getPiece() const { return piece; }
-    void setPiece(const std::shared_ptr<Piece>& _piece) { piece = _piece; }
+    void setPiece(const std::shared_ptr<Piece>& _piece);
 
     void setStyle(const QString& style);
-    void resetStyle() { currentStyle = defaultStyle; setStyle(currentStyle); }
+    void resetStyle() { setStyle(defaultStyle); }
     const QString& getStyle() const;
+
+    void update();
+
+    [[nodiscard]] const auto& getLocation() const { return pos; }
 
 
 private:
     QString currentStyle;
     QString defaultStyle;
+
     std::shared_ptr<Piece> piece = nullptr;
+
+    Location pos;
 
 signals:
     void clicked(ClickableSquare* ptr);

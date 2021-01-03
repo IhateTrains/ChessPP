@@ -22,17 +22,23 @@ public:
 
     [[nodiscard]] virtual const std::string getImagePath() const { throw("Something's wrong: getImagePath used in base Piece class!");};
     [[nodiscard]] auto getColor() const { return color; }
+
     [[nodiscard]] const auto& getLocation() const { return location; }
     [[nodiscard]] virtual const std::vector<Location>& getLegalMoves() { return legalMoves; }
 
+    virtual void move(unsigned short x, unsigned short y);
+
 
 protected:
+    void addLegalMove(unsigned short x, unsigned short y) { legalMoves.emplace_back(Location{x, y}); }
+
     PieceColor color;
     std::vector<Location> legalMoves{};
     std::shared_ptr<Board> board;
     Location location;
 
 private:
+
 };
 
 #endif // PIECE_H

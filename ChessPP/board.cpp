@@ -11,17 +11,15 @@ Board::Board(QWidget* parent, QGridLayout* gridLayout): gridLayout(gridLayout)
              // determine square color and create a chess square
              ClickableSquare* pole;
              if ((y+(x%2))%2 == 0)
-                 pole = new ClickableSquare(CIEMNY, parent); // dark square
+                 pole = new ClickableSquare(x, y, CIEMNY, parent); // dark square
              else
-                 pole = new ClickableSquare(JASNY, parent); // bright square
+                 pole = new ClickableSquare(x, y, JASNY, parent); // bright square
 
              // connect square's signals to board's slot
              QObject::connect(pole, &ClickableSquare::clicked,
                          this, &Board::squareClicked);
              // add square to array
              squaresVec[y][x] = pole;
-
-
 
              // set the square size
              pole->setFixedHeight(80);
@@ -95,11 +93,8 @@ void Board::initialize()
             else throw("Board state corrupt!");
 
 
-            QPixmap pix(newPiece->getImagePath().c_str());
             auto pole = squaresVec[y][x];
-            int w = pole->width();
-            int h = pole->height();
-            pole->setPixmap(pix.scaled(w,h,Qt::KeepAspectRatio));
+
             pole->setPiece(newPiece);
         }
     }
@@ -107,9 +102,9 @@ void Board::initialize()
 
 void Board::squareClicked(ClickableSquare* ptr)
 {
-    //QMessageBox msgBox;
+    QMessageBox msgBox;
     //if (squaresVec[0][0]->containsPiece())
-       // QMessageBox::question(&msgBox, "", QString::number(1+ptr->getPiece()->getLocation().x) + " " + QString::number(1+ptr->getPiece()->getLocation().y), QMessageBox::Yes|QMessageBox::No);
+       // QMessageBox::question(&msgBox, "", QString::number(1+ptr->getPiece()->getLocation().x) + " " + QString::number(1+ptr->getPiece()->getLocation().y), QMessageBox::Yes);
 
 
     switch(state)
@@ -132,12 +127,26 @@ void Board::squareClicked(ClickableSquare* ptr)
     case BoardState::srcSelected:
         if (ptr->containsPiece())
         {
-            if (ptr->getStyle() == ZAZNACZONY)
+            if (ptr->getStyle() == ZAZNACZONY) // undo selection without making a move
             {
-                //ptr->setStyle(ptr->defaultStyle); // undo selection without making a move
                 state = BoardState::defaultState;
                 refresh();
             }
+            else if (ptr->getStyle() == MOZLIWY_RUCH) // capture
+            {
+                ptr->setPiece(nullptr);
+                auto destPos = ptr->getLocation();
+                squaresVec[movingPieceLocation.y][movingPieceLocation.x]->getPiece()->move(destPos.x, destPos.y);
+                state = BoardState::defaultState;
+                refresh();
+            }
+        }
+        else if (ptr->getStyle() == MOZLIWY_RUCH) // move the piece from src to dest
+        {
+            auto destPos = ptr->getLocation();
+            squaresVec[movingPieceLocation.y][movingPieceLocation.x]->getPiece()->move(destPos.x, destPos.y);
+            state = BoardState::defaultState;
+            refresh();
         }
         break;
     default:

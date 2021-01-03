@@ -12,6 +12,8 @@ public:
     [[nodiscard]] bool isLongMovePossible() const { return firstMove; }
     [[nodiscard]] const std::vector<Location>& getLegalMoves();
 
+    void move(unsigned short x, unsigned short y);
+
 private:
     bool firstMove = true;
 };
