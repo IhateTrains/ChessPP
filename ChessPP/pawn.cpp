@@ -50,7 +50,7 @@ const std::vector<Location>& Pawn::getLegalMoves()
                 addLegalMove(location.x, location.y-1);
 
             // first move can be a long move
-            if (location.y-2 >= 0 && !board->getSquare(location.x, location.y-2)->containsPiece())
+            if (firstMove && location.y-2 >= 0 && !board->getSquare(location.x, location.y-2)->containsPiece())
             {
                 addLegalMove(location.x, location.y-2);
             }

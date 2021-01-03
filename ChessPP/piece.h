@@ -31,6 +31,7 @@ public:
 
 protected:
     void addLegalMove(unsigned short x, unsigned short y) { legalMoves.emplace_back(Location{x, y}); }
+    virtual bool tryAddLegalMove(unsigned short x, unsigned short y);
 
     PieceColor color;
     std::vector<Location> legalMoves{};

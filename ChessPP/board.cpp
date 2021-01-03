@@ -138,6 +138,7 @@ void Board::squareClicked(ClickableSquare* ptr)
                 auto destPos = ptr->getLocation();
                 squaresVec[movingPieceLocation.y][movingPieceLocation.x]->getPiece()->move(destPos.x, destPos.y);
                 state = BoardState::defaultState;
+                changeMovingPlayerColor();
                 refresh();
             }
         }
@@ -146,6 +147,7 @@ void Board::squareClicked(ClickableSquare* ptr)
             auto destPos = ptr->getLocation();
             squaresVec[movingPieceLocation.y][movingPieceLocation.x]->getPiece()->move(destPos.x, destPos.y);
             state = BoardState::defaultState;
+            changeMovingPlayerColor();
             refresh();
         }
         break;
@@ -170,6 +172,13 @@ void Board::refresh()
     default:
         break;
     }
+}
 
 
+void Board::changeMovingPlayerColor()
+{
+    if (movingPlayerColor == PieceColor::black)
+        movingPlayerColor = PieceColor::white;
+    else
+        movingPlayerColor = PieceColor::black;
 }

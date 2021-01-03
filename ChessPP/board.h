@@ -30,6 +30,7 @@ public slots:
 
 private:
     void refresh();
+    void changeMovingPlayerColor();
 
     QGridLayout* gridLayout = nullptr;
     BoardState state = BoardState::defaultState;
