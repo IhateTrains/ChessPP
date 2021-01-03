@@ -9,7 +9,7 @@ const std::string Pawn::getImagePath() const
 }
 
 
-const std::vector<Location>& Pawn::getLegalMoves()
+const std::vector<Move>& Pawn::getLegalMoves()
 {
     legalMoves.clear();
     if (color == PieceColor::white)
@@ -18,26 +18,26 @@ const std::vector<Location>& Pawn::getLegalMoves()
         {
             // regular move
             if (!board->getSquare(location.x, location.y+1)->containsPiece())
-                addLegalMove(location.x, location.y+1);
+                addLegalMove(location.x, location.y+1, MoveType::onlyMove);
 
             // first move can be a long move
-            if (firstMove && location.y+2 < 8 && !board->getSquare(location.x, location.y+2)->containsPiece())
+            if (firstMove && location.y+2 < 8 && !board->getSquare(location.x, location.y+1)->containsPiece() && !board->getSquare(location.x, location.y+2)->containsPiece())
             {
-                addLegalMove(location.x, location.y+2);
+                addLegalMove(location.x, location.y+2, MoveType::onlyMove);
             }
 
             //regular capture moves
             if (location.x-1 >= 0)
             {
                 const auto& possibleCaptureSquare = board->getSquare(location.x-1, location.y+1);
-                if (possibleCaptureSquare->containsPiece() && possibleCaptureSquare->getPiece()->getColor() != color)
-                    addLegalMove(location.x-1, location.y+1);
+                if (possibleCaptureSquare->containsPiece() && possibleCaptureSquare->getPiece()->getColor() != color && !possibleCaptureSquare->getPiece()->isKing())
+                    addLegalMove(location.x-1, location.y+1, MoveType::onlyCapture);
             }
             if (location.x+1 < 8)
             {
                 const auto& possibleCaptureSquare = board->getSquare(location.x+1, location.y+1);
-                if (possibleCaptureSquare->containsPiece() && possibleCaptureSquare->getPiece()->getColor() != color)
-                    addLegalMove(location.x+1, location.y+1);
+                if (possibleCaptureSquare->containsPiece() && possibleCaptureSquare->getPiece()->getColor() != color && !possibleCaptureSquare->getPiece()->isKing())
+                    addLegalMove(location.x+1, location.y+1, MoveType::onlyCapture);
             }
         }
     }
@@ -47,26 +47,26 @@ const std::vector<Location>& Pawn::getLegalMoves()
         {
             // regular move
             if (!board->getSquare(location.x, location.y-1)->containsPiece())
-                addLegalMove(location.x, location.y-1);
+                addLegalMove(location.x, location.y-1, MoveType::onlyMove);
 
             // first move can be a long move
-            if (firstMove && location.y-2 >= 0 && !board->getSquare(location.x, location.y-2)->containsPiece())
+            if (firstMove && location.y-2 >= 0 && !board->getSquare(location.x, location.y-1)->containsPiece() && !board->getSquare(location.x, location.y-2)->containsPiece())
             {
-                addLegalMove(location.x, location.y-2);
+                addLegalMove(location.x, location.y-2, MoveType::onlyMove);
             }
 
             //regular capture moves
             if (location.x-1 >= 0)
             {
                 const auto& possibleCaptureSquare = board->getSquare(location.x-1, location.y-1);
-                if (possibleCaptureSquare->containsPiece() && possibleCaptureSquare->getPiece()->getColor() != color)
-                    addLegalMove(location.x-1, location.y-1);
+                if (possibleCaptureSquare->containsPiece() && possibleCaptureSquare->getPiece()->getColor() != color && !possibleCaptureSquare->getPiece()->isKing())
+                    addLegalMove(location.x-1, location.y-1, MoveType::onlyCapture);
             }
             if (location.x+1 < 8)
             {
                 const auto& possibleCaptureSquare = board->getSquare(location.x+1, location.y-1);
-                if (possibleCaptureSquare->containsPiece() && possibleCaptureSquare->getPiece()->getColor() != color)
-                    addLegalMove(location.x+1, location.y-1);
+                if (possibleCaptureSquare->containsPiece() && possibleCaptureSquare->getPiece()->getColor() != color && !possibleCaptureSquare->getPiece()->isKing())
+                    addLegalMove(location.x+1, location.y-1, MoveType::onlyCapture);
             }
         }
     }

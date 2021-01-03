@@ -6,12 +6,21 @@
 #include <memory>
 
 enum class PieceColor { black, white };
-//enum class PieceType { king, queen, rook, bishop, knight, pawn };
+enum class MoveType { onlyMove, onlyCapture, capturePawnAfterLongMove };
 
 struct Location
 {
     int x;
     int y;
+};
+
+class Move
+{
+public:
+    Move(const Location& a, const Location& b, const MoveType& type): startPos(a), destPos(b), moveType(type) {};
+    Location startPos;
+    Location destPos;
+    MoveType moveType;
 };
 
 class Board; // forward declaration
@@ -24,7 +33,7 @@ public:
     [[nodiscard]] auto getColor() const { return color; }
 
     [[nodiscard]] const auto& getLocation() const { return location; }
-    [[nodiscard]] virtual const std::vector<Location>& getLegalMoves() { return legalMoves; }
+    [[nodiscard]] virtual const std::vector<Move>& getLegalMoves() { return legalMoves; }
 
     virtual void move(unsigned short x, unsigned short y);
 
@@ -32,11 +41,11 @@ public:
 
 
 protected:
-    void addLegalMove(unsigned short x, unsigned short y) { legalMoves.emplace_back(Location{x, y}); }
+    void addLegalMove(unsigned short x, unsigned short y, MoveType moveType) { legalMoves.emplace_back(Location{location.x, location.y}, Location{x, y}, moveType); }
     virtual bool tryAddLegalMove(unsigned short x, unsigned short y);
 
     PieceColor color;
-    std::vector<Location> legalMoves{};
+    std::vector<Move> legalMoves{};
     std::shared_ptr<Board> board;
     Location location;
 

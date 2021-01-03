@@ -35,13 +35,16 @@ private:
     void changeMovingPlayerColor();
     [[nodiscard]] auto getOppositeColor(PieceColor color) const;
 
-
     QGridLayout* gridLayout = nullptr;
-    BoardState state = BoardState::defaultState;
-    PieceColor movingPlayerColor = PieceColor::white;
 
     std::array<std::array<ClickableSquare*, 8>, 8> squaresVec;
+
+    BoardState state = BoardState::defaultState;
+    PieceColor movingPlayerColor = PieceColor::white;
     Location movingPieceLocation;
+
+    std::map<PieceColor, Move> movesMap;
+    std::map<PieceColor, Move> capturesMap;
 };
 
 #endif // BOARD_H

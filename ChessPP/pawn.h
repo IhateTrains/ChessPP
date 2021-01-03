@@ -10,7 +10,7 @@ public:
 
     [[nodiscard]] const std::string getImagePath() const;
     [[nodiscard]] bool isLongMovePossible() const { return firstMove; }
-    [[nodiscard]] const std::vector<Location>& getLegalMoves();
+    [[nodiscard]] const std::vector<Move>& getLegalMoves();
 
     void move(unsigned short x, unsigned short y);
 

@@ -9,7 +9,7 @@ const std::string Rook::getImagePath() const
     else return ":/images/RookW.png";
 }
 
-const std::vector<Location>& Rook::getLegalMoves()
+const std::vector<Move>& Rook::getLegalMoves()
 {
     legalMoves.clear();
 

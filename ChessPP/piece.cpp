@@ -27,11 +27,11 @@ bool Piece::tryAddLegalMove(unsigned short x, unsigned short y)
 
     if (!destSquare->containsPiece())
     {
-        addLegalMove(x, y);
+        addLegalMove(x, y, MoveType::onlyMove);
     }
-    else if (destSquare->getPiece()->getColor() != color)
+    else if (destSquare->getPiece()->getColor() != color && !destSquare->getPiece()->isKing())
     {
-        addLegalMove(x, y);
+        addLegalMove(x, y, MoveType::onlyCapture);
         return true;
     }
     else

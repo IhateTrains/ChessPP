@@ -102,7 +102,7 @@ void Board::initialize()
 
 void Board::squareClicked(ClickableSquare* ptr)
 {
-    QMessageBox msgBox;
+    QMessageBox msgBox; // DEBUG
     //if (squaresVec[0][0]->containsPiece())
        // QMessageBox::question(&msgBox, "", QString::number(1+ptr->getPiece()->getLocation().x) + " " + QString::number(1+ptr->getPiece()->getLocation().y), QMessageBox::Yes);
 
@@ -119,7 +119,7 @@ void Board::squareClicked(ClickableSquare* ptr)
             // display legal moves
             for (const auto& move : ptr->getPiece()->getLegalMoves())
             {
-                squaresVec[move.y][move.x]->setStyle(MOZLIWY_RUCH);
+                squaresVec[move.destPos.y][move.destPos.x]->setStyle(MOZLIWY_RUCH);
             }
         }
         break;

@@ -10,7 +10,7 @@ const std::string King::getImagePath() const
 }
 
 
-const std::vector<Location>& King::getLegalMoves()
+const std::vector<Move>& King::getLegalMoves()
 {
     legalMoves.clear();
 

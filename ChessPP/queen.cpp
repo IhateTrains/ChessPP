@@ -9,7 +9,7 @@ const std::string Queen::getImagePath() const
 }
 
 
-const std::vector<Location>& Queen::getLegalMoves()
+const std::vector<Move>& Queen::getLegalMoves()
 {
     legalMoves.clear();
 

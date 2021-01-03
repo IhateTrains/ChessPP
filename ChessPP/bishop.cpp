@@ -10,7 +10,7 @@ const std::string Bishop::getImagePath() const
 }
 
 
-const std::vector<Location>& Bishop::getLegalMoves()
+const std::vector<Move>& Bishop::getLegalMoves()
 {
     legalMoves.clear();
 

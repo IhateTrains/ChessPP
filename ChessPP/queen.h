@@ -11,7 +11,7 @@ public:
 
     [[nodiscard]] const std::string getImagePath() const;
 
-    [[nodiscard]] const std::vector<Location>& getLegalMoves();
+    [[nodiscard]] const std::vector<Move>& getLegalMoves();
 };
 
 #endif // QUEEN_H
