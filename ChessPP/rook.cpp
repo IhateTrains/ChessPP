@@ -41,7 +41,5 @@ const std::vector<Location>& Rook::getLegalMoves()
             break;
     }
 
-
-
     return legalMoves;
 }

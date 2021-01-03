@@ -25,7 +25,6 @@ const std::vector<Location>& Bishop::getLegalMoves()
                 break;
         }
     }
-
     //up left
     x = location.x;
     for (auto y=location.y+1; y<8; ++y)
