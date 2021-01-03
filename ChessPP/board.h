@@ -25,12 +25,16 @@ public:
     void initialize(); // initial placement of pieces on the board
     [[nodiscard]] const auto& getSquare(const int x, const int y) const { return squaresVec[y][x]; }
 
+    [[nodiscard]] Location getEnemyKingPos(PieceColor playerColor) const;
+
 public slots:
     void squareClicked(ClickableSquare* ptr);
 
 private:
     void refresh();
     void changeMovingPlayerColor();
+    [[nodiscard]] auto getOppositeColor(PieceColor color) const;
+
 
     QGridLayout* gridLayout = nullptr;
     BoardState state = BoardState::defaultState;

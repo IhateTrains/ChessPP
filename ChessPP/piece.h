@@ -28,6 +28,8 @@ public:
 
     virtual void move(unsigned short x, unsigned short y);
 
+    [[nodiscard]] virtual bool isKing() { return false; }
+
 
 protected:
     void addLegalMove(unsigned short x, unsigned short y) { legalMoves.emplace_back(Location{x, y}); }

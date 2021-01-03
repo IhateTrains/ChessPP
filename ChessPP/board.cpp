@@ -175,10 +175,29 @@ void Board::refresh()
 }
 
 
+auto Board::getOppositeColor(PieceColor color) const
+{
+    if (color == PieceColor::black)
+        return PieceColor::white;
+    else
+        return PieceColor::black;
+}
+
+
 void Board::changeMovingPlayerColor()
 {
-    if (movingPlayerColor == PieceColor::black)
-        movingPlayerColor = PieceColor::white;
-    else
-        movingPlayerColor = PieceColor::black;
+    movingPlayerColor = getOppositeColor(movingPlayerColor);
+}
+
+
+Location Board::getEnemyKingPos(PieceColor playerColor) const
+{
+    auto enemyColor = getOppositeColor(playerColor);
+
+    for (const auto& row : squaresVec)
+        for (const auto& square : row)
+            if (square->containsPiece() && square->getPiece()->isKing() && square->getPiece()->getColor() == enemyColor)
+                return square->getLocation();
+
+    throw("No enemy king found");
 }
