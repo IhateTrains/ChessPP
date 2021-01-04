@@ -23,9 +23,12 @@ public:
     Board(QWidget* parent, QGridLayout* gridLayout);
 
     void initialize(); // initial placement of pieces on the board
-    [[nodiscard]] const auto& getSquare(const int x, const int y) const { return squaresVec[y][x]; }
+    [[nodiscard]] const auto& getSquare(const unsigned short x, const unsigned short y) const { return squaresVec[y][x]; }
 
-    [[nodiscard]] Location getEnemyKingPos(PieceColor playerColor) const;
+    [[nodiscard]] Location getEnemyKingPos(const PieceColor playerColor) const;
+    [[nodiscard]] const auto& getEnemyCaptures(const PieceColor playerColor) const;
+    [[nodiscard]] bool isKingDangerSquare(const unsigned short x, const unsigned short y, const PieceColor kingColor) const;
+
 
 public slots:
     void squareClicked(ClickableSquare* ptr);
@@ -33,7 +36,8 @@ public slots:
 private:
     void refresh();
     void changeMovingPlayerColor();
-    [[nodiscard]] auto getOppositeColor(PieceColor color) const;
+    [[nodiscard]] auto getOppositeColor(const PieceColor color) const;
+    void generateMoves();
 
     QGridLayout* gridLayout = nullptr;
 
@@ -43,8 +47,10 @@ private:
     PieceColor movingPlayerColor = PieceColor::white;
     Location movingPieceLocation;
 
-    std::map<PieceColor, Move> movesMap;
-    std::map<PieceColor, Move> capturesMap;
+    std::map<PieceColor, std::vector<Move>> movesMap { { PieceColor::black, std::vector<Move>{} }, { PieceColor::white, std::vector<Move>{} } };
+    std::map<PieceColor, std::vector<Move>> capturesMap { { PieceColor::black, std::vector<Move>{} }, { PieceColor::white, std::vector<Move>{} } };
+
+    std::map<PieceColor, std::vector<Location>> kingDangerSquaresMap { { PieceColor::black, std::vector<Location>{} }, { PieceColor::white, std::vector<Location>{} } };
 };
 
 #endif // BOARD_H

@@ -6,7 +6,7 @@
 #include <memory>
 
 enum class PieceColor { black, white };
-enum class MoveType { onlyMove, onlyCapture, capturePawnAfterLongMove };
+enum class MoveType { onlyMove, onlyCapture, enPassant };
 
 struct Location
 {
@@ -34,8 +34,9 @@ public:
 
     [[nodiscard]] const auto& getLocation() const { return location; }
     [[nodiscard]] virtual const std::vector<Move>& getLegalMoves() { return legalMoves; }
-
     virtual void move(unsigned short x, unsigned short y);
+
+    [[nodiscard]] virtual const std::vector<Location>& getKingDangerSquarePositions() { return kingDangerSquareLocations; }
 
     [[nodiscard]] virtual bool isKing() { return false; }
 
@@ -44,8 +45,14 @@ protected:
     void addLegalMove(unsigned short x, unsigned short y, MoveType moveType) { legalMoves.emplace_back(Location{location.x, location.y}, Location{x, y}, moveType); }
     virtual bool tryAddLegalMove(unsigned short x, unsigned short y);
 
+    void addKingDangerSquarePos(unsigned short x, unsigned short y) { kingDangerSquareLocations.push_back(Location{x, y}); }
+    virtual bool tryAddKingDangerSquarePos(unsigned short x, unsigned short y);
+
     PieceColor color;
+
     std::vector<Move> legalMoves{};
+    std::vector<Location> kingDangerSquareLocations{};
+
     std::shared_ptr<Board> board;
     Location location;
 

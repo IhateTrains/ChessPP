@@ -39,3 +39,26 @@ bool Piece::tryAddLegalMove(unsigned short x, unsigned short y)
 
     return false;
 }
+
+
+bool Piece::tryAddKingDangerSquarePos(unsigned short x, unsigned short y)
+{
+    // returns true if it's supposed to break a loop
+
+    const auto& destSquare = board->getSquare(x, y);
+
+    if (!destSquare->containsPiece())
+    {
+        addKingDangerSquarePos(x, y);
+    }
+    else if (destSquare->getPiece()->getColor() != color)
+    {
+        addKingDangerSquarePos(x, y);
+        if (!destSquare->getPiece()->isKing())
+            return true;
+    }
+    else
+        return true;
+
+    return false;
+}

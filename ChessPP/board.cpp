@@ -175,7 +175,7 @@ void Board::refresh()
 }
 
 
-auto Board::getOppositeColor(PieceColor color) const
+auto Board::getOppositeColor(const PieceColor color) const
 {
     if (color == PieceColor::black)
         return PieceColor::white;
@@ -187,10 +187,11 @@ auto Board::getOppositeColor(PieceColor color) const
 void Board::changeMovingPlayerColor()
 {
     movingPlayerColor = getOppositeColor(movingPlayerColor);
+    generateMoves();
 }
 
 
-Location Board::getEnemyKingPos(PieceColor playerColor) const
+Location Board::getEnemyKingPos(const PieceColor playerColor) const
 {
     auto enemyColor = getOppositeColor(playerColor);
 
@@ -200,4 +201,80 @@ Location Board::getEnemyKingPos(PieceColor playerColor) const
                 return square->getLocation();
 
     throw("No enemy king found");
+}
+
+
+const auto& Board::getEnemyCaptures(const PieceColor playerColor) const
+{
+    auto enemyColor = getOppositeColor(playerColor);
+    return capturesMap.at(enemyColor);
+}
+
+
+bool Board::isKingDangerSquare(const unsigned short x, const unsigned short y, const PieceColor kingColor) const
+{
+    for (const auto& pos : kingDangerSquaresMap.at(kingColor))
+        if (pos.x == x && pos.y == y)
+            return true;
+
+    return false;
+}
+
+
+void Board::generateMoves()
+{
+    movesMap[PieceColor::black] = std::vector<Move>{};
+    movesMap[PieceColor::white] = std::vector<Move>{};
+    capturesMap[PieceColor::black] = std::vector<Move>{};
+    capturesMap[PieceColor::white] = std::vector<Move>{};
+
+    kingDangerSquaresMap[PieceColor::black] = std::vector<Location>{};
+    kingDangerSquaresMap[PieceColor::white] = std::vector<Location>{};
+
+    std::vector<ClickableSquare*> kingSquares;
+
+    for (auto y=0; y<8; ++y)
+        for (auto x=0; x<8; ++x)
+        {
+            const auto& square = getSquare(x, y);
+            if (square->containsPiece())
+            {
+                const auto& piece = square->getPiece();
+
+                if (piece->isKing())
+                {
+                    kingSquares.push_back(square);
+                    continue; // kings are handled in a later loop
+                }
+
+                auto color = piece->getColor();
+                const auto& moves = piece->getLegalMoves();
+                for (const auto& move : moves)
+                    switch (move.moveType)
+                    {
+                    case MoveType::onlyMove: { movesMap[color].push_back(move); break; }
+                    case MoveType::onlyCapture: { capturesMap[color].push_back(move); break; }
+                    case MoveType::enPassant: { capturesMap[color].push_back(move); break; }
+                    }
+
+                for (const auto& pos : piece->getKingDangerSquarePositions())
+                {
+                    kingDangerSquaresMap[getOppositeColor(color)].push_back(pos);
+                }
+
+            }
+        }
+
+    for (const auto& king : kingSquares)
+    {
+        auto color = king->getPiece()->getColor();
+        const auto& moves = king->getPiece()->getLegalMoves();
+        for (const auto& move : moves)
+            switch (move.moveType)
+            {
+            case MoveType::onlyMove: { movesMap[color].push_back(move); break; }
+            case MoveType::onlyCapture: { capturesMap[color].push_back(move); break; }
+            case MoveType::enPassant: { capturesMap[color].push_back(move); break; }
+            }
+    }
 }

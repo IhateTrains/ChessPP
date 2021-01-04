@@ -11,7 +11,21 @@ const std::string Pawn::getImagePath() const
 
 const std::vector<Move>& Pawn::getLegalMoves()
 {
+    generateLegalMovesAndKingDangers();
+    return legalMoves;
+}
+
+const std::vector<Location>& Pawn::getKingDangerSquarePositions()
+{
+    generateLegalMovesAndKingDangers();
+    return kingDangerSquareLocations;
+}
+
+void Pawn::generateLegalMovesAndKingDangers()
+{
     legalMoves.clear();
+    kingDangerSquareLocations.clear();
+
     if (color == PieceColor::white)
     {
         if (location.y+1 < 8)
@@ -31,13 +45,20 @@ const std::vector<Move>& Pawn::getLegalMoves()
             {
                 const auto& possibleCaptureSquare = board->getSquare(location.x-1, location.y+1);
                 if (possibleCaptureSquare->containsPiece() && possibleCaptureSquare->getPiece()->getColor() != color && !possibleCaptureSquare->getPiece()->isKing())
+                {
                     addLegalMove(location.x-1, location.y+1, MoveType::onlyCapture);
+                }
+                addKingDangerSquarePos(location.x-1, location.y+1);
+
             }
             if (location.x+1 < 8)
             {
                 const auto& possibleCaptureSquare = board->getSquare(location.x+1, location.y+1);
                 if (possibleCaptureSquare->containsPiece() && possibleCaptureSquare->getPiece()->getColor() != color && !possibleCaptureSquare->getPiece()->isKing())
+                {
                     addLegalMove(location.x+1, location.y+1, MoveType::onlyCapture);
+                }
+                addKingDangerSquarePos(location.x+1, location.y+1);
             }
         }
     }
@@ -59,19 +80,23 @@ const std::vector<Move>& Pawn::getLegalMoves()
             if (location.x-1 >= 0)
             {
                 const auto& possibleCaptureSquare = board->getSquare(location.x-1, location.y-1);
-                if (possibleCaptureSquare->containsPiece() && possibleCaptureSquare->getPiece()->getColor() != color && !possibleCaptureSquare->getPiece()->isKing())
+                if (possibleCaptureSquare->containsPiece() && possibleCaptureSquare->getPiece()->getColor() != color)
+                {
                     addLegalMove(location.x-1, location.y-1, MoveType::onlyCapture);
+                }
+                addKingDangerSquarePos(location.x-1, location.y-1);
             }
             if (location.x+1 < 8)
             {
                 const auto& possibleCaptureSquare = board->getSquare(location.x+1, location.y-1);
                 if (possibleCaptureSquare->containsPiece() && possibleCaptureSquare->getPiece()->getColor() != color && !possibleCaptureSquare->getPiece()->isKing())
+                {
                     addLegalMove(location.x+1, location.y-1, MoveType::onlyCapture);
+                }
+                addKingDangerSquarePos(location.x+1, location.y-1);
             }
         }
     }
-
-    return legalMoves;
 }
 
 

@@ -10,8 +10,12 @@ public:
     [[nodiscard]] const std::string getImagePath() const;
 
     [[nodiscard]] const std::vector<Move>& getLegalMoves();
+    [[nodiscard]] const std::vector<Location>& getKingDangerSquarePositions();
 
     [[nodiscard]] bool isKing() { return true; }
+
+private:
+    void generateLegalMovesAndKingDangers();
 };
 
 #endif // KING_H

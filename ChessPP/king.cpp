@@ -12,8 +12,21 @@ const std::string King::getImagePath() const
 
 const std::vector<Move>& King::getLegalMoves()
 {
-    legalMoves.clear();
+    generateLegalMovesAndKingDangers();
+    return legalMoves;
+}
 
+const std::vector<Location>& King::getKingDangerSquarePositions()
+{
+    generateLegalMovesAndKingDangers();
+    return kingDangerSquareLocations;
+}
+
+
+void King::generateLegalMovesAndKingDangers()
+{
+    legalMoves.clear();
+    kingDangerSquareLocations.clear();
 
     auto enemyKingPos = board->getEnemyKingPos(color);
 
@@ -30,13 +43,23 @@ const std::vector<Move>& King::getLegalMoves()
 
                     // a king can't get inside enemy king's move range
                     if ((abs(x-enemyKingPos.x)+abs(y-enemyKingPos.y)<=1) || (abs(x-enemyKingPos.x)==1 && abs(y-enemyKingPos.y) == 1))
+                    {
+                        tryAddKingDangerSquarePos(x, y);
                         continue;
+                    }
+
+                    // a king can't move onto a square that is in check
+                    if (board->isKingDangerSquare(x, y, color))
+                    {
+                        tryAddKingDangerSquarePos(x, y);
+                        continue;
+                    }
 
                     tryAddLegalMove(x, y);
+                    tryAddKingDangerSquarePos(x, y);
+
                 }
             }
         }
     }
-
-    return legalMoves;
 }

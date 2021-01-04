@@ -61,3 +61,56 @@ const std::vector<Move>& Bishop::getLegalMoves()
 
     return legalMoves;
 }
+
+
+const std::vector<Location>& Bishop::getKingDangerSquarePositions()
+{
+    kingDangerSquareLocations.clear();
+
+    //up right
+    auto x = location.x;
+    for (auto y=location.y+1; y<8; ++y)
+    {
+        ++x;
+        if (x<8)
+        {
+            if (tryAddKingDangerSquarePos(x, y))
+                break;
+        }
+    }
+    //up left
+    x = location.x;
+    for (auto y=location.y+1; y<8; ++y)
+    {
+        --x;
+        if (x>=0)
+        {
+            if (tryAddKingDangerSquarePos(x, y))
+                break;
+        }
+    }
+    //down right
+    x = location.x;
+    for (auto y=location.y-1; y>=0; --y)
+    {
+        ++x;
+        if (x<8)
+        {
+            if (tryAddKingDangerSquarePos(x, y))
+                break;
+        }
+    }
+    //down left
+    x = location.x;
+    for (auto y=location.y-1; y>=0; --y)
+    {
+        --x;
+        if (x>=0)
+        {
+            if (tryAddKingDangerSquarePos(x, y))
+                break;
+        }
+    }
+
+    return kingDangerSquareLocations;
+}
