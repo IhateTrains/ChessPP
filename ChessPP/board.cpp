@@ -119,7 +119,8 @@ void Board::squareClicked(ClickableSquare* ptr)
             // display legal moves
             for (const auto& move : ptr->getPiece()->getLegalMoves())
             {
-                squaresVec[move.destPos.y][move.destPos.x]->setStyle(MOZLIWY_RUCH);
+                if (move.moveType == MoveType::onlyMove) squaresVec[move.destPos.y][move.destPos.x]->setStyle(MOZLIWY_RUCH);
+                if (move.moveType == MoveType::onlyCapture) squaresVec[move.destPos.y][move.destPos.x]->setStyle(BITY);
             }
         }
         break;
@@ -132,7 +133,7 @@ void Board::squareClicked(ClickableSquare* ptr)
                 state = BoardState::defaultState;
                 refresh();
             }
-            else if (ptr->getStyle() == MOZLIWY_RUCH) // capture
+            else if (ptr->getStyle() == BITY) // capture
             {
                 ptr->setPiece(nullptr);
                 auto destPos = ptr->getLocation();
@@ -142,7 +143,7 @@ void Board::squareClicked(ClickableSquare* ptr)
                 refresh();
             }
         }
-        else if (ptr->getStyle() == MOZLIWY_RUCH) // move the piece from src to dest
+        else if (ptr->getStyle() == MOZLIWY_RUCH) // push
         {
             auto destPos = ptr->getLocation();
             squaresVec[movingPieceLocation.y][movingPieceLocation.x]->getPiece()->move(destPos.x, destPos.y);
