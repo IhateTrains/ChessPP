@@ -103,5 +103,9 @@ void Pawn::generateLegalMovesAndKingDangers()
 void Pawn::move(unsigned short x, unsigned short y)
 {
     Piece::move(x,y);
+    // promotion
+    if ( (color == PieceColor::white && y==7) || (color == PieceColor::black && y==0) )
+        board->promotePawn(x,y);
+
     firstMove = false;
 }

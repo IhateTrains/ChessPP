@@ -13,7 +13,9 @@
 
 #include <QVector>
 #include <QGridLayout>
+
 #include "qmessagebox.h"
+#include "promotiondialog.h"
 
 enum class BoardState { defaultState, srcSelected, destSelected };
 
@@ -29,6 +31,7 @@ public:
     [[nodiscard]] const auto& getEnemyCaptures(const PieceColor playerColor) const;
     [[nodiscard]] bool isKingDangerSquare(const unsigned short x, const unsigned short y, const PieceColor kingColor) const;
 
+    void promotePawn(unsigned short x, unsigned short y);
 
 public slots:
     void squareClicked(ClickableSquare* ptr);
@@ -40,6 +43,7 @@ private:
     void generateMoves();
 
     QGridLayout* gridLayout = nullptr;
+    std::shared_ptr<Board> sharedBoardPtr = nullptr;
 
     std::array<std::array<ClickableSquare*, 8>, 8> squaresVec;
 

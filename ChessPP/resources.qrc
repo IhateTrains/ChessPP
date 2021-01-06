@@ -1,5 +1,5 @@
 <RCC>
-    <qresource>
+    <qresource prefix="/">
         <file>images/BishopB.png</file>
         <file>images/BishopW.png</file>
         <file>images/KingB.png</file>
@@ -12,5 +12,6 @@
         <file>images/QueenW.png</file>
         <file>images/RookB.png</file>
         <file>images/RookW.png</file>
+        <file>sounds/108615__juskiddink__billiard-balls-single-hit-dry.wav</file>
     </qresource>
 </RCC>

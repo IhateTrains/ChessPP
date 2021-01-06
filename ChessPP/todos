@@ -1,0 +1,10 @@
+add read/write game state to file
+
+add promoting
+add en passant
+add castling
+
+add makemove/undomove
+
+
+play sound when move is made

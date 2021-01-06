@@ -18,6 +18,7 @@ SOURCES += \
     mainwindow.cpp \
     pawn.cpp \
     piece.cpp \
+    promotiondialog.cpp \
     queen.cpp \
     rook.cpp
 
@@ -30,11 +31,13 @@ HEADERS += \
     mainwindow.h \
     pawn.h \
     piece.h \
+    promotiondialog.h \
     queen.h \
     rook.h
 
 FORMS += \
-    mainwindow.ui
+    mainwindow.ui \
+    promotiondialog.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
@@ -45,7 +48,8 @@ DISTFILES += \
     ../Chess_Artwork/Chess Board/Wood/border_bottom_legend.png \
     ../Chess_Artwork/Chess Board/Wood/border_bottom_legend.png \
     ../Chess_Artwork/Chess Board/Wood/border_left_legend.png \
-    ../Chess_Artwork/Chess Board/Wood/border_left_legend.png
+    ../Chess_Artwork/Chess Board/Wood/border_left_legend.png \
+    todos
 
 RESOURCES += \
     resources.qrc

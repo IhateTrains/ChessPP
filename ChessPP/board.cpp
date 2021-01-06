@@ -57,7 +57,7 @@ void Board::initialize()
     } };
 
 
-    auto sharedBoardPtr = std::shared_ptr<Board>(this);
+    sharedBoardPtr = std::shared_ptr<Board>(this);
 
     for (auto i = 0; i<8; ++i)
     {
@@ -119,8 +119,8 @@ void Board::squareClicked(ClickableSquare* ptr)
             // display legal moves
             for (const auto& move : ptr->getPiece()->getLegalMoves())
             {
-                if (move.moveType == MoveType::onlyMove) squaresVec[move.destPos.y][move.destPos.x]->setStyle(MOZLIWY_RUCH);
-                if (move.moveType == MoveType::onlyCapture) squaresVec[move.destPos.y][move.destPos.x]->setStyle(BITY);
+                if (move.moveType == MoveType::onlyMove) getSquare(move.destPos.x, move.destPos.y)->setStyle(MOZLIWY_RUCH);
+                if (move.moveType == MoveType::onlyCapture) getSquare(move.destPos.x, move.destPos.y)->setStyle(BITY);
             }
         }
         break;
@@ -137,7 +137,7 @@ void Board::squareClicked(ClickableSquare* ptr)
             {
                 ptr->setPiece(nullptr);
                 auto destPos = ptr->getLocation();
-                squaresVec[movingPieceLocation.y][movingPieceLocation.x]->getPiece()->move(destPos.x, destPos.y);
+                getSquare(movingPieceLocation.x, movingPieceLocation.y)->getPiece()->move(destPos.x, destPos.y);
                 state = BoardState::defaultState;
                 changeMovingPlayerColor();
                 refresh();
@@ -146,7 +146,7 @@ void Board::squareClicked(ClickableSquare* ptr)
         else if (ptr->getStyle() == MOZLIWY_RUCH) // push
         {
             auto destPos = ptr->getLocation();
-            squaresVec[movingPieceLocation.y][movingPieceLocation.x]->getPiece()->move(destPos.x, destPos.y);
+            getSquare(movingPieceLocation.x, movingPieceLocation.y)->getPiece()->move(destPos.x, destPos.y);
             state = BoardState::defaultState;
             changeMovingPlayerColor();
             refresh();
@@ -166,7 +166,7 @@ void Board::refresh()
         {
             for (auto x=0; x<8; ++x)
             {
-                squaresVec[y][x]->resetStyle();
+                getSquare(x,y)->resetStyle();
             }
         }
         break;
@@ -278,4 +278,18 @@ void Board::generateMoves()
             case MoveType::enPassant: { capturesMap[color].push_back(move); break; }
             }
     }
+}
+
+
+void Board::promotePawn(unsigned short x, unsigned short y)
+{
+    const auto& square = getSquare(x, y);
+    const auto color = square->getPiece()->getColor();
+
+
+    promotionDialog promotionDialog;
+    promotionDialog.exec();
+
+    std::shared_ptr<Piece> newPiece = std::make_shared<Queen>(x, y, color, sharedBoardPtr);
+    square->setPiece(newPiece);
 }
