@@ -4,6 +4,10 @@ ClickableSquare::ClickableSquare(unsigned short x, unsigned short y, const QStri
     : QLabel(parent), currentStyle(defaultStyle), defaultStyle(defaultStyle), pos{x, y}
 {
     setStyle(defaultStyle);
+
+    // set the square size
+    setFixedHeight(80);
+    setFixedWidth(80);
 }
 
 ClickableSquare::~ClickableSquare() {}

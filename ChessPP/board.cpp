@@ -2,7 +2,7 @@
 
 
 
-Board::Board(QWidget* parent, QGridLayout* gridLayout): gridLayout(gridLayout)
+Board::Board(QWidget* parent, QGridLayout* gridLayout): parent(parent), gridLayout(gridLayout)
 {
     for (auto y = 7; y>=0; --y)
     {
@@ -20,10 +20,6 @@ Board::Board(QWidget* parent, QGridLayout* gridLayout): gridLayout(gridLayout)
                          this, &Board::squareClicked);
              // add square to array
              squaresVec[y][x] = pole;
-
-             // set the square size
-             pole->setFixedHeight(80);
-             pole->setFixedWidth(80);
 
              // add the square to the board
              this->gridLayout->addWidget(pole,7-y,x);
@@ -286,10 +282,18 @@ void Board::promotePawn(unsigned short x, unsigned short y)
     const auto& square = getSquare(x, y);
     const auto color = square->getPiece()->getColor();
 
+    std::shared_ptr<Piece> newPiece;
 
-    promotionDialog promotionDialog;
-    promotionDialog.exec();
+    promotionDialog promotionDialog(color, this->parent);
+    auto selectedPieceType = promotionDialog.exec();
+    switch (selectedPieceType)
+    {
+    case 0: { newPiece = std::make_shared<Queen>(x, y, color, sharedBoardPtr); break; }
+    case 1: { newPiece = std::make_shared<Rook>(x, y, color, sharedBoardPtr); break; }
+    case 2: { newPiece = std::make_shared<Bishop>(x, y, color, sharedBoardPtr); break; }
+    case 3: { newPiece = std::make_shared<Knight>(x, y, color, sharedBoardPtr); break; }
+    default: newPiece = std::make_shared<Queen>(x, y, color, sharedBoardPtr);
+    }
 
-    std::shared_ptr<Piece> newPiece = std::make_shared<Queen>(x, y, color, sharedBoardPtr);
     square->setPiece(newPiece);
 }

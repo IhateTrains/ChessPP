@@ -42,6 +42,7 @@ private:
     [[nodiscard]] auto getOppositeColor(const PieceColor color) const;
     void generateMoves();
 
+    QWidget* parent = nullptr;
     QGridLayout* gridLayout = nullptr;
     std::shared_ptr<Board> sharedBoardPtr = nullptr;
 
