@@ -6,7 +6,14 @@
 class Rook final: public Piece
 {
 public:
-    Rook(unsigned short x, unsigned short y, PieceColor color, std::shared_ptr<Board> board): Piece(x, y, color, board){};
+    Rook(unsigned short x, unsigned short y, PieceColor color, std::shared_ptr<Board> board): Piece(x, y, color, board)
+    {
+        pieceStr = "R";
+        if (color == PieceColor::white)
+            pieceStr += "w";
+        else
+            pieceStr += "b";
+    };
 
     [[nodiscard]] const std::string getImagePath() const;
 

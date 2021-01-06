@@ -6,7 +6,14 @@
 class King final: public Piece
 {
 public:
-    King(unsigned short x, unsigned short y, PieceColor color, std::shared_ptr<Board> board): Piece(x, y, color, board){};
+    King(unsigned short x, unsigned short y, PieceColor color, std::shared_ptr<Board> board): Piece(x, y, color, board)
+    {
+        pieceStr = "K";
+        if (color == PieceColor::white)
+            pieceStr += "w";
+        else
+            pieceStr += "b";
+    };
     [[nodiscard]] const std::string getImagePath() const;
 
     [[nodiscard]] const std::vector<Move>& getLegalMoves();

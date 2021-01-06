@@ -25,6 +25,7 @@ public:
     Board(QWidget* parent, QGridLayout* gridLayout);
 
     void initialize(); // initial placement of pieces on the board
+
     [[nodiscard]] const auto& getSquare(const unsigned short x, const unsigned short y) const { return squaresVec[y][x]; }
 
     [[nodiscard]] Location getEnemyKingPos(const PieceColor playerColor) const;
@@ -35,6 +36,7 @@ public:
 
 public slots:
     void squareClicked(ClickableSquare* ptr);
+    void saveState();
 
 private:
     void refresh();

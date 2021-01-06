@@ -6,7 +6,14 @@
 class Pawn final: public Piece
 {
 public:
-    Pawn(unsigned short x, unsigned short y, PieceColor color, std::shared_ptr<Board> board): Piece(x, y, color, board){};
+    Pawn(unsigned short x, unsigned short y, PieceColor color, std::shared_ptr<Board> board): Piece(x, y, color, board)
+    {
+        pieceStr = "p";
+        if (color == PieceColor::white)
+            pieceStr += "w";
+        else
+            pieceStr += "b";
+    };
 
     [[nodiscard]] const std::string getImagePath() const;
     [[nodiscard]] bool isLongMovePossible() const { return firstMove; }

@@ -30,6 +30,7 @@ public:
     Piece(unsigned short x, unsigned short y, PieceColor color, std::shared_ptr<Board> board);
 
     [[nodiscard]] virtual const std::string getImagePath() const { throw("Something's wrong: getImagePath used in base Piece class!");};
+    [[nodiscard]] const std::string& getPieceStr() const { return pieceStr; }
     [[nodiscard]] auto getColor() const { return color; }
 
     [[nodiscard]] const auto& getLocation() const { return location; }
@@ -55,6 +56,8 @@ protected:
 
     std::shared_ptr<Board> board;
     Location location;
+
+    std::string pieceStr = "0";
 
 private:
 

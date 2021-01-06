@@ -14,12 +14,12 @@ MainWindow::MainWindow(QWidget *parent)
     ui->board->setVerticalSpacing(0);
 
     Board* board = new Board(this, ui->board);
+    QObject::connect(ui->actionSave, &QAction::triggered,
+                     board, &Board::saveState);
     board->initialize();
 
     // add to QGridLayout board;
     //this->setLayout(ui->board);
-
-
 }
 
 MainWindow::~MainWindow()

@@ -6,7 +6,14 @@
 class Bishop final: public Piece
 {
 public:
-    Bishop(unsigned short x, unsigned short y, PieceColor color, std::shared_ptr<Board> board): Piece(x, y, color, board){};
+    Bishop(unsigned short x, unsigned short y, PieceColor color, std::shared_ptr<Board> board): Piece(x, y, color, board)
+    {
+        pieceStr = "B";
+        if (color == PieceColor::white)
+            pieceStr += "w";
+        else
+            pieceStr += "b";
+    };
     [[nodiscard]] const std::string getImagePath() const;
 
     [[nodiscard]] const std::vector<Move>& getLegalMoves();

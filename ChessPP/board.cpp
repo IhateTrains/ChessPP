@@ -1,5 +1,5 @@
 #include "board.h"
-
+#include "fstream"
 
 
 Board::Board(QWidget* parent, QGridLayout* gridLayout): parent(parent), gridLayout(gridLayout)
@@ -94,6 +94,46 @@ void Board::initialize()
             pole->setPiece(newPiece);
         }
     }
+}
+void Board::loadState()
+{
+    std::ifstream file("save.txt");
+    for (auto y = 7; y>=0; --y)
+    {
+         for (auto x = 0; x<8; ++x)
+         {
+            std::string pieceStr = "0";
+            file >> pieceStr;
+            const auto& square = getSquare(x, y);
+            if (square->containsPiece())
+            {
+                pieceStr = square->getPiece()->getPieceStr();
+            }
+         }
+         file << "\n";
+    }
+
+    file.close();
+}
+void Board::saveState()
+{
+    std::ofstream file("save.txt");
+    for (auto y = 7; y>=0; --y)
+    {
+         for (auto x = 0; x<8; ++x)
+         {
+            std::string pieceStr = "0 ";
+            const auto& square = getSquare(x, y);
+            if (square->containsPiece())
+            {
+                pieceStr = square->getPiece()->getPieceStr();
+            }
+            file << pieceStr << " ";
+         }
+         file << "\n";
+    }
+
+    file.close();
 }
 
 void Board::squareClicked(ClickableSquare* ptr)

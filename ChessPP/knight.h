@@ -6,7 +6,14 @@
 class Knight final: public Piece
 {
 public:
-    Knight(unsigned short x, unsigned short y, PieceColor color, std::shared_ptr<Board> board): Piece(x, y, color, board){};
+    Knight(unsigned short x, unsigned short y, PieceColor color, std::shared_ptr<Board> board): Piece(x, y, color, board)
+    {
+        pieceStr = "N";
+        if (color == PieceColor::white)
+            pieceStr += "w";
+        else
+            pieceStr += "b";
+    };
     [[nodiscard]] const std::string getImagePath() const;
 
     [[nodiscard]] const std::vector<Move>& getLegalMoves();
