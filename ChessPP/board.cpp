@@ -29,6 +29,7 @@ Board::Board(QWidget* parent, QGridLayout* gridLayout): parent(parent), gridLayo
 
 void Board::initialize()
 {
+    sharedBoardPtr = std::shared_ptr<Board>(this);
     /*
      * King = K
      * Queen = Q
@@ -52,15 +53,16 @@ void Board::initialize()
         {"Rw", "Nw", "Bw", "Qw", "Kw", "Bw", "Nw", "Rw"},
     } };
 
-
-    sharedBoardPtr = std::shared_ptr<Board>(this);
-
+    loadPlacementFromArray(initialPlecement);
+}
+void Board::loadPlacementFromArray(const std::array<std::array<std::string, 8>, 8>& array)
+{
     for (auto i = 0; i<8; ++i)
     {
         auto y=7-i;
         for (auto x = 0; x<8; ++x)
         {
-            auto pieceStr = initialPlecement[i][x];
+            auto pieceStr = array[i][x];
 
             std::shared_ptr<Piece> newPiece;
             PieceColor newPieceColor;
@@ -88,7 +90,6 @@ void Board::initialize()
                 newPiece = std::make_shared<Pawn>(x, y, newPieceColor, sharedBoardPtr);
             else throw("Board state corrupt!");
 
-
             auto pole = squaresVec[y][x];
 
             pole->setPiece(newPiece);
@@ -97,23 +98,18 @@ void Board::initialize()
 }
 void Board::loadState()
 {
+    std::array<std::array<std::string, 8>, 8> array;
     std::ifstream file("save.txt");
     for (auto y = 7; y>=0; --y)
     {
          for (auto x = 0; x<8; ++x)
          {
-            std::string pieceStr = "0";
-            file >> pieceStr;
-            const auto& square = getSquare(x, y);
-            if (square->containsPiece())
-            {
-                pieceStr = square->getPiece()->getPieceStr();
-            }
+            std::string pieceStr;
+            file >> array[y][x];
          }
-         file << "\n";
     }
-
     file.close();
+    loadPlacementFromArray(array);
 }
 void Board::saveState()
 {

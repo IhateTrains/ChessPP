@@ -36,6 +36,7 @@ public:
 
 public slots:
     void squareClicked(ClickableSquare* ptr);
+    void loadState();
     void saveState();
 
 private:
@@ -43,6 +44,8 @@ private:
     void changeMovingPlayerColor();
     [[nodiscard]] auto getOppositeColor(const PieceColor color) const;
     void generateMoves();
+
+    void loadPlacementFromArray(const std::array<std::array<std::string, 8>, 8>& array);
 
     QWidget* parent = nullptr;
     QGridLayout* gridLayout = nullptr;
