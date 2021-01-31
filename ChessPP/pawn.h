@@ -21,7 +21,7 @@ public:
     [[nodiscard]] const std::vector<Move>& getLegalMoves();
     [[nodiscard]] const std::vector<Location>& getKingDangerSquarePositions();
 
-    void move(unsigned short x, unsigned short y);
+    void move(const Move& move);
 
 private:
     bool firstMove = true;

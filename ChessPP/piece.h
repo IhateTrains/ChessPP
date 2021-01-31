@@ -19,6 +19,7 @@ class Move
 public:
     Move() = default;
     Move(const Location& a, const Location& b, const MoveType& type): startPos(a), destPos(b), moveType(type) {};
+    Move(const Move& move): startPos(move.startPos), destPos(move.destPos), moveType(move.moveType) {}
     Location startPos;
     Location destPos;
     MoveType moveType;
@@ -36,7 +37,7 @@ public:
 
     [[nodiscard]] const auto& getLocation() const { return location; }
     [[nodiscard]] virtual const std::vector<Move>& getLegalMoves() { return legalMoves; }
-    virtual void move(unsigned short x, unsigned short y);
+    virtual void move(const Move& move);
 
     [[nodiscard]] virtual const std::vector<Location>& getKingDangerSquarePositions() { return kingDangerSquareLocations; }
 

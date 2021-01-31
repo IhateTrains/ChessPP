@@ -175,16 +175,21 @@ void Board::squareClicked(ClickableSquare* ptr)
             }
             else if (ptr->getStyle() == BITY) // capture
             {
-                const auto& destPos = ptr->getLocation();
-                makeMove(moveCache[destPos.y][destPos.x]);
+                const auto& [x, y] = ptr->getLocation();
+                makeMove(moveCache[y][x]);
                 refresh();
             }
         }
+        else if (ptr->getStyle() == BITY) // en passant
+        {
+            const auto& [x, y] = ptr->getLocation();
+            makeMove(moveCache[y][x]);
+            refresh();
+        }
         else if (ptr->getStyle() == MOZLIWY_RUCH) // push
         {
-
-            const auto& destPos = ptr->getLocation();
-            makeMove(moveCache[destPos.y][destPos.x]);
+            const auto& [x, y] = ptr->getLocation();
+            makeMove(moveCache[y][x]);
             refresh();
         }
         break;
@@ -198,13 +203,9 @@ void Board::refresh()
     switch (state)
     {
     case BoardState::defaultState:
-        for (auto y=0; y<8; ++y)
-        {
-            for (auto x=0; x<8; ++x)
-            {
-                getSquare(x,y)->resetStyle();
-            }
-        }
+        for (const auto& row : squaresArray)
+            for (const auto& square : row)
+                square->resetStyle();
         break;
     default:
         break;
@@ -262,9 +263,13 @@ bool Board::isEnpassantPossible(unsigned short x, unsigned short y)
     if (gameDataVec.size()<2)
         return false;
 
-    if (gameDataVec.back().movesSinceLastLongPawnMove==0)
+    const auto& lastMoveDestPos = gameDataVec.back().lastMove.destPos;
+    if (gameDataVec.back().movesSinceLastLongPawnMove==0 && lastMoveDestPos.x == x)
     {
-        return true;
+        if (movingPlayerColor == PieceColor::white && lastMoveDestPos.y == y-1)
+            return true;
+        else if (movingPlayerColor == PieceColor::black && lastMoveDestPos.y == y+1)
+            return true;
     }
     return false;
 }
@@ -332,7 +337,7 @@ void Board::makeMove(const Move& move)
 {
     auto destPos = move.destPos;
     getSquare(destPos)->setPiece(nullptr);
-    getSquare(movingPieceLocation.x, movingPieceLocation.y)->getPiece()->move(destPos.x, destPos.y);
+    getSquare(movingPieceLocation)->getPiece()->move(move);
     state = BoardState::defaultState;
     changeMovingPlayerColor();
 }

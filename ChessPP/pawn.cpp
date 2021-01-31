@@ -131,12 +131,26 @@ void Pawn::generateLegalMovesAndKingDangers()
 }
 
 
-void Pawn::move(unsigned short x, unsigned short y)
+void Pawn::move(const Move& move)
 {
-    Piece::move(x,y);
+    Piece::move(move);
     // promotion
+    const auto& [x, y] = move.destPos;
     if ( (color == PieceColor::white && y==7) || (color == PieceColor::black && y==0) )
-        board->promotePawn(x,y);
+        board->promotePawn(x, y);
+    // en passant
+    else if (move.moveType == MoveType::enPassant)
+    {
+        if (color==PieceColor::white)
+        {
+            board->getSquare(x, y-1)->setPiece(nullptr);
+        }
+        else
+        {
+            board->getSquare(x, y+1)->setPiece(nullptr);
+        }
+    }
 
     firstMove = false;
+    board->gameDataVec.back().movesSinceLastLongPawnMove = 0;
 }

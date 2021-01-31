@@ -21,7 +21,7 @@ enum class BoardState { defaultState, srcSelected };
 
 struct GameData {
     unsigned short movesSinceLastLongPawnMove;
-    Location lastMoveDest;
+    Move lastMove;
 };
 
 class Board : public QObject
@@ -41,6 +41,8 @@ public:
     [[nodiscard]] bool isEnpassantPossible(unsigned short x, unsigned short y);
 
     void promotePawn(unsigned short x, unsigned short y);
+
+    std::vector<GameData> gameDataVec = { {} };
 
 public slots:
     void squareClicked(ClickableSquare* ptr);
@@ -70,7 +72,6 @@ private:
     PieceColor movingPlayerColor = PieceColor::white;
     Location movingPieceLocation;
 
-    std::vector<GameData> gameDataVec = { {0, {0,0} } };
 
     std::map<PieceColor, std::vector<Move>> movesMap { { PieceColor::black, std::vector<Move>{} }, { PieceColor::white, std::vector<Move>{} } };
     std::map<PieceColor, std::vector<Move>> capturesMap { { PieceColor::black, std::vector<Move>{} }, { PieceColor::white, std::vector<Move>{} } };

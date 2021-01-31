@@ -8,14 +8,18 @@ Piece::Piece(unsigned short x, unsigned short y, PieceColor color, std::shared_p
 
 }
 
-void Piece::move(unsigned short x, unsigned short y)
+void Piece::move(const Move& move)
 {
-    const auto& piecePtr = board->getSquare(location.x, location.y)->getPiece();
-    board->getSquare(x, y)->setPiece(piecePtr);
-    board->getSquare(location.x, location.y)->setPiece(nullptr);
+    const auto& piecePtr = board->getSquare(location)->getPiece();
+    board->getSquare(move.destPos)->setPiece(piecePtr);
+    board->getSquare(location)->setPiece(nullptr);
 
-    location.x = x;
-    location.y = y;
+    location = move.destPos;
+
+    auto temp = board->gameDataVec.back().movesSinceLastLongPawnMove;
+    board->gameDataVec.emplace_back();
+    board->gameDataVec.back().movesSinceLastLongPawnMove = temp+1;
+    board->gameDataVec.back().lastMove = move;
 }
 
 
