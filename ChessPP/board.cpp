@@ -103,6 +103,27 @@ void Board::loadPlacementFromArray(const std::array<std::array<std::string, 8>, 
         }
     }
 }
+
+int Board::evaluateForColor(const PieceColor color)
+{
+    int boardValue = 0;
+    for (const auto& row : squaresArray)
+    {
+        for (const auto& square : row)
+        {
+            if (!square->containsPiece())
+                continue;
+
+            const auto& piece = square->getPiece();
+            if (piece->getColor() == color)
+                boardValue += piece->getValue();
+            else
+                boardValue -= piece->getValue();
+        }
+    }
+    return boardValue;
+}
+
 void Board::loadState()
 {
     std::array<std::array<std::string, 8>, 8> array;

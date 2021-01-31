@@ -58,8 +58,11 @@ private:
 
     void generateMoves();
     void makeMove(const Move& move);
+    //void unMove();
 
     void loadPlacementFromArray(const std::array<std::array<std::string, 8>, 8>& array);
+
+    int evaluateForColor(const PieceColor color);
 
     QWidget* parent = nullptr;
     QGridLayout* gridLayout = nullptr;

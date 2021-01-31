@@ -21,6 +21,8 @@ public:
     [[nodiscard]] const std::vector<Move>& getLegalMoves();
     [[nodiscard]] const std::vector<Location>& getKingDangerSquarePositions();
 
+    [[nodiscard]] int getValue() const { return 1; }
+
     void move(const Move& move);
 
 private:

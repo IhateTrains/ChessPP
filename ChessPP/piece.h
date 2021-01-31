@@ -42,6 +42,7 @@ public:
     [[nodiscard]] virtual const std::vector<Location>& getKingDangerSquarePositions() { return kingDangerSquareLocations; }
 
     [[nodiscard]] virtual bool isKing() { return false; }
+    [[nodiscard]] virtual int getValue() const = 0; // values are based on https://www.chessprogramming.org/Point_Value
 
 
 protected:
