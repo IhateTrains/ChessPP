@@ -51,6 +51,8 @@ promotionDialog::promotionDialog(PieceColor pieceColor, QWidget *parent) :
 promotionDialog::~promotionDialog()
 {
     delete ui;
+    for (const auto& pole : squaresArray)
+        delete pole;
 }
 
 void promotionDialog::squareClicked(ClickableSquare* ptr)

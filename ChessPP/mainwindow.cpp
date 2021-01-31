@@ -2,7 +2,6 @@
 #include "ui_mainwindow.h"
 
 #include "clickableSquare.h"
-#include "board.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -13,7 +12,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->board->setHorizontalSpacing(0);
     ui->board->setVerticalSpacing(0);
 
-    Board* board = new Board(this, ui->board);
+    board = new Board(this, ui->board);
     QObject::connect(ui->actionSave, &QAction::triggered,
                      board, &Board::saveState);
     board->initialize();
@@ -24,6 +23,7 @@ MainWindow::MainWindow(QWidget *parent)
 
 MainWindow::~MainWindow()
 {
+    delete board;
     delete ui;
 }
 

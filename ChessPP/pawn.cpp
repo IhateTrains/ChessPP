@@ -40,7 +40,7 @@ void Pawn::generateLegalMovesAndKingDangers()
                 addLegalMove(location.x, location.y+2, MoveType::onlyMove);
             }
 
-            //regular capture moves
+            //regular capture moves + en passant
             if (location.x-1 >= 0)
             {
                 const auto& possibleCaptureSquare = board->getSquare(location.x-1, location.y+1);
@@ -48,8 +48,15 @@ void Pawn::generateLegalMovesAndKingDangers()
                 {
                     addLegalMove(location.x-1, location.y+1, MoveType::onlyCapture);
                 }
+                else if (!possibleCaptureSquare->containsPiece() && board->isEnpassantPossible(location.x-1, location.y+1)) // en passant is possible
+                {
+                    const auto& possibleEnPassantCaptureSquare = board->getSquare(location.x-1, location.y);
+                    if (possibleEnPassantCaptureSquare->containsPiece())
+                    {
+                        addLegalMove(location.x-1, location.y+1, MoveType::enPassant);
+                    }
+                }
                 addKingDangerSquarePos(location.x-1, location.y+1);
-
             }
             if (location.x+1 < 8)
             {
@@ -57,6 +64,14 @@ void Pawn::generateLegalMovesAndKingDangers()
                 if (possibleCaptureSquare->containsPiece() && possibleCaptureSquare->getPiece()->getColor() != color && !possibleCaptureSquare->getPiece()->isKing())
                 {
                     addLegalMove(location.x+1, location.y+1, MoveType::onlyCapture);
+                }
+                else if (!possibleCaptureSquare->containsPiece() && board->isEnpassantPossible(location.x+1, location.y+1)) // en passant is possible
+                {
+                    const auto& possibleEnPassantCaptureSquare = board->getSquare(location.x+1, location.y);
+                    if (possibleEnPassantCaptureSquare->containsPiece())
+                    {
+                        addLegalMove(location.x+1, location.y+1, MoveType::enPassant);
+                    }
                 }
                 addKingDangerSquarePos(location.x+1, location.y+1);
             }
@@ -76,13 +91,21 @@ void Pawn::generateLegalMovesAndKingDangers()
                 addLegalMove(location.x, location.y-2, MoveType::onlyMove);
             }
 
-            //regular capture moves
+            //regular capture moves + en passant
             if (location.x-1 >= 0)
             {
                 const auto& possibleCaptureSquare = board->getSquare(location.x-1, location.y-1);
                 if (possibleCaptureSquare->containsPiece() && possibleCaptureSquare->getPiece()->getColor() != color)
                 {
                     addLegalMove(location.x-1, location.y-1, MoveType::onlyCapture);
+                }
+                else if (!possibleCaptureSquare->containsPiece() && board->isEnpassantPossible(location.x-1, location.y-1)) // en passant is possible
+                {
+                    const auto& possibleEnPassantCaptureSquare = board->getSquare(location.x-1, location.y);
+                    if (possibleEnPassantCaptureSquare->containsPiece())
+                    {
+                        addLegalMove(location.x-1, location.y-1, MoveType::enPassant);
+                    }
                 }
                 addKingDangerSquarePos(location.x-1, location.y-1);
             }
@@ -92,6 +115,14 @@ void Pawn::generateLegalMovesAndKingDangers()
                 if (possibleCaptureSquare->containsPiece() && possibleCaptureSquare->getPiece()->getColor() != color && !possibleCaptureSquare->getPiece()->isKing())
                 {
                     addLegalMove(location.x+1, location.y-1, MoveType::onlyCapture);
+                }
+                else if (!possibleCaptureSquare->containsPiece() && board->isEnpassantPossible(location.x+1, location.y-1)) // en passant is possible
+                {
+                    const auto& possibleEnPassantCaptureSquare = board->getSquare(location.x+1, location.y);
+                    if (possibleEnPassantCaptureSquare->containsPiece())
+                    {
+                        addLegalMove(location.x+1, location.y-1, MoveType::enPassant);
+                    }
                 }
                 addKingDangerSquarePos(location.x+1, location.y-1);
             }

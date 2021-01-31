@@ -19,12 +19,19 @@ Board::Board(QWidget* parent, QGridLayout* gridLayout): parent(parent), gridLayo
              QObject::connect(pole, &ClickableSquare::clicked,
                          this, &Board::squareClicked);
              // add square to array
-             squaresVec[y][x] = pole;
+             squaresArray[y][x] = pole;
 
              // add the square to the board
              this->gridLayout->addWidget(pole,7-y,x);
          }
     }
+}
+
+Board::~Board()
+{
+    for (const auto& row : squaresArray)
+        for (const auto& square : row)
+            delete square;
 }
 
 void Board::initialize()
@@ -90,7 +97,7 @@ void Board::loadPlacementFromArray(const std::array<std::array<std::string, 8>, 
                 newPiece = std::make_shared<Pawn>(x, y, newPieceColor, sharedBoardPtr);
             else throw("Board state corrupt!");
 
-            auto pole = squaresVec[y][x];
+            auto pole = squaresArray[y][x];
 
             pole->setPiece(newPiece);
         }
@@ -152,11 +159,12 @@ void Board::squareClicked(ClickableSquare* ptr)
             for (const auto& move : ptr->getPiece()->getLegalMoves())
             {
                 if (move.moveType == MoveType::onlyMove) getSquare(move.destPos.x, move.destPos.y)->setStyle(MOZLIWY_RUCH);
-                if (move.moveType == MoveType::onlyCapture) getSquare(move.destPos.x, move.destPos.y)->setStyle(BITY);
+                else if (move.moveType == MoveType::onlyCapture || move.moveType == MoveType::enPassant) getSquare(move.destPos.x, move.destPos.y)->setStyle(BITY);
+
+                moveCache[move.destPos.y][move.destPos.x] = move;
             }
         }
         break;
-    //TODO: ADD CASE FOR DESTSELECTED
     case BoardState::srcSelected:
         if (ptr->containsPiece())
         {
@@ -167,20 +175,16 @@ void Board::squareClicked(ClickableSquare* ptr)
             }
             else if (ptr->getStyle() == BITY) // capture
             {
-                ptr->setPiece(nullptr);
-                auto destPos = ptr->getLocation();
-                getSquare(movingPieceLocation.x, movingPieceLocation.y)->getPiece()->move(destPos.x, destPos.y);
-                state = BoardState::defaultState;
-                changeMovingPlayerColor();
+                const auto& destPos = ptr->getLocation();
+                makeMove(moveCache[destPos.y][destPos.x]);
                 refresh();
             }
         }
         else if (ptr->getStyle() == MOZLIWY_RUCH) // push
         {
-            auto destPos = ptr->getLocation();
-            getSquare(movingPieceLocation.x, movingPieceLocation.y)->getPiece()->move(destPos.x, destPos.y);
-            state = BoardState::defaultState;
-            changeMovingPlayerColor();
+
+            const auto& destPos = ptr->getLocation();
+            makeMove(moveCache[destPos.y][destPos.x]);
             refresh();
         }
         break;
@@ -228,7 +232,7 @@ Location Board::getEnemyKingPos(const PieceColor playerColor) const
 {
     auto enemyColor = getOppositeColor(playerColor);
 
-    for (const auto& row : squaresVec)
+    for (const auto& row : squaresArray)
         for (const auto& square : row)
             if (square->containsPiece() && square->getPiece()->isKing() && square->getPiece()->getColor() == enemyColor)
                 return square->getLocation();
@@ -250,6 +254,18 @@ bool Board::isKingDangerSquare(const unsigned short x, const unsigned short y, c
         if (pos.x == x && pos.y == y)
             return true;
 
+    return false;
+}
+
+bool Board::isEnpassantPossible(unsigned short x, unsigned short y)
+{
+    if (gameDataVec.size()<2)
+        return false;
+
+    if (gameDataVec.back().movesSinceLastLongPawnMove==0)
+    {
+        return true;
+    }
     return false;
 }
 
@@ -310,6 +326,15 @@ void Board::generateMoves()
             case MoveType::enPassant: { capturesMap[color].push_back(move); break; }
             }
     }
+}
+
+void Board::makeMove(const Move& move)
+{
+    auto destPos = move.destPos;
+    getSquare(destPos)->setPiece(nullptr);
+    getSquare(movingPieceLocation.x, movingPieceLocation.y)->getPiece()->move(destPos.x, destPos.y);
+    state = BoardState::defaultState;
+    changeMovingPlayerColor();
 }
 
 

@@ -17,6 +17,7 @@ struct Location
 class Move
 {
 public:
+    Move() = default;
     Move(const Location& a, const Location& b, const MoveType& type): startPos(a), destPos(b), moveType(type) {};
     Location startPos;
     Location destPos;
@@ -29,7 +30,7 @@ class Piece
 public:
     Piece(unsigned short x, unsigned short y, PieceColor color, std::shared_ptr<Board> board);
 
-    [[nodiscard]] virtual const std::string getImagePath() const { throw("Something's wrong: getImagePath used in base Piece class!");};
+    [[nodiscard]] virtual const std::string getImagePath() const = 0;
     [[nodiscard]] const std::string& getPieceStr() const { return pieceStr; }
     [[nodiscard]] auto getColor() const { return color; }
 
