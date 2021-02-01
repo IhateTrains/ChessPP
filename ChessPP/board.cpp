@@ -203,6 +203,7 @@ void Board::squareClicked(ClickableSquare* ptr)
                 const auto& [x, y] = ptr->getLocation();
                 makeMove(moveCache[y][x]);
                 refresh();
+                makeAiMove();
             }
         }
         else if (ptr->getStyle() == POSSIBLE_CAPTURE) // en passant
@@ -210,12 +211,14 @@ void Board::squareClicked(ClickableSquare* ptr)
             const auto& [x, y] = ptr->getLocation();
             makeMove(moveCache[y][x]);
             refresh();
+            makeAiMove();
         }
         else if (ptr->getStyle() == POSSIBLE_PUSH) // push
         {
             const auto& [x, y] = ptr->getLocation();
             makeMove(moveCache[y][x]);
             refresh();
+            makeAiMove();
         }
         break;
     default:
@@ -369,9 +372,26 @@ void Board::makeMove(const Move& move)
 {
     auto destPos = move.destPos;
     getSquare(destPos)->setPiece(nullptr);
-    getSquare(movingPieceLocation)->getPiece()->move(move);
+    getSquare(move.startPos)->getPiece()->move(move);
     state = BoardState::defaultState;
     changeMovingPlayerColor();
+}
+
+void Board::makeAiMove()
+{
+    // prefer captures over pushes
+    const auto& possibleCaptures = capturesMap[PieceColor::black];
+    if (!possibleCaptures.empty())
+    {
+        unsigned int randomIndex = rand() % possibleCaptures.size();
+        makeMove(possibleCaptures.at(randomIndex));
+    }
+    else // if there are no possible captures, choose a random push
+    {
+        const auto& possiblePushes = movesMap[PieceColor::black];
+        unsigned int randomIndex = rand() % possiblePushes.size();
+        makeMove(possiblePushes.at(randomIndex));
+    }
 }
 
 

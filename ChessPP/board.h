@@ -61,6 +61,7 @@ private:
     void generateMoves();
     void makeMove(const Move& move);
     //void unMove();
+    void makeAiMove();
 
     void loadPlacementFromArray(const std::array<std::array<std::string, 8>, 8>& array);
 
