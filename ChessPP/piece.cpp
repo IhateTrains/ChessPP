@@ -18,8 +18,14 @@ void Piece::move(const Move& move)
 
     auto temp = board->gameDataVec.back().movesSinceLastLongPawnMove;
     board->gameDataVec.emplace_back();
+
     board->gameDataVec.back().movesSinceLastLongPawnMove = temp+1;
     board->gameDataVec.back().lastMove = move;
+
+    board->gameDataVec.back().untouchedSquares = board->gameDataVec[board->gameDataVec.size()-2].untouchedSquares;
+    board->gameDataVec.back().untouchedSquares[location.y][location.x] = false;
+    board->gameDataVec.back().untouchedSquares[move.startPos.y][move.startPos.x] = false;
+
 }
 
 
@@ -31,11 +37,11 @@ bool Piece::tryAddLegalMove(unsigned short x, unsigned short y)
 
     if (!destSquare->containsPiece())
     {
-        addLegalMove(x, y, MoveType::onlyMove);
+        addLegalMove(x, y, MoveType::simplePush);
     }
     else if (destSquare->getPiece()->getColor() != color && !destSquare->getPiece()->isKing())
     {
-        addLegalMove(x, y, MoveType::onlyCapture);
+        addLegalMove(x, y, MoveType::simpleCapture);
         return true;
     }
     else

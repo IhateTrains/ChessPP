@@ -4,9 +4,9 @@
 
 #define CIEMNY "background-color: rgb(207, 140, 72);"
 #define JASNY "background-color: rgb(254, 206, 160);"
-#define ZAZNACZONY "background-color: rgb(0, 0, 255);"
-#define BITY "background-color: rgb(255, 0, 0);"
-#define MOZLIWY_RUCH "background-color: rgb(0, 255, 0);"
+#define SELECTED "background-color: rgb(0, 0, 255);"
+#define POSSIBLE_CAPTURE "background-color: rgb(255, 0, 0);"
+#define POSSIBLE_PUSH "background-color: rgb(0, 255, 0);"
 
 
 #include <QLabel>

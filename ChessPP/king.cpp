@@ -22,6 +22,29 @@ const std::vector<Location>& King::getKingDangerSquarePositions()
     return kingDangerSquareLocations;
 }
 
+void King::move(const Move& move)
+{
+    Piece::move(move);
+
+    // castling
+    if (move.moveType == MoveType::castling)
+    {
+        // move the rook
+        if (move.destPos.x == 2)
+        {
+            board->getSquare(3, move.destPos.y)->setPiece(board->getSquare(0, move.destPos.y)->getPiece());
+            board->getSquare(3, move.destPos.y)->getPiece()->setLocation(3, move.destPos.y);
+            board->getSquare(0, move.destPos.y)->setPiece(nullptr);
+        }
+        else // destPos.x == 6
+        {
+            board->getSquare(5, move.destPos.y)->setPiece(board->getSquare(7, move.destPos.y)->getPiece());
+            board->getSquare(5, move.destPos.y)->getPiece()->setLocation(5, move.destPos.y);
+            board->getSquare(7, move.destPos.y)->setPiece(nullptr);
+        }
+    }
+}
+
 
 void King::generateLegalMovesAndKingDangers()
 {
@@ -30,6 +53,7 @@ void King::generateLegalMovesAndKingDangers()
 
     auto enemyKingPos = board->getEnemyKingPos(color);
 
+    // regular moves
     for (auto y=location.y-1; y<=location.y+1; ++y)
     {
         if (y>=0 && y<8)
@@ -59,6 +83,27 @@ void King::generateLegalMovesAndKingDangers()
                     tryAddKingDangerSquarePos(x, y);
 
                 }
+            }
+        }
+    }
+    // castling
+    const auto& [x, y] = location;
+    if (board->isSquareUntouched(x, y)) // only possible if rook hasn't moved
+    {
+        // to the right
+        if (!board->getSquare(x+1, y)->containsPiece() && !board->getSquare(x+2, y)->containsPiece())
+        {
+            if (board->isSquareUntouched(x+3, y)) // rook hasn't moved
+            {
+                addLegalMove(x+2, y, MoveType::castling);
+            }
+        }
+        // to the left
+        if (!board->getSquare(x-1, y)->containsPiece() && !board->getSquare(x-2, y)->containsPiece())
+        {
+            if (board->isSquareUntouched(x-4, y)) // rook hasn't moved
+            {
+                addLegalMove(x-2, y, MoveType::castling);
             }
         }
     }

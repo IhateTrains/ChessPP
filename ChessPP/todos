@@ -1,3 +1,3 @@
-add castling
+check for check in castling
 
-add makemove/undomove
+add undomove

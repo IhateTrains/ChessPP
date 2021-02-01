@@ -6,7 +6,7 @@
 #include <memory>
 
 enum class PieceColor { black, white };
-enum class MoveType { onlyMove, onlyCapture, enPassant };
+enum class MoveType { simplePush, simpleCapture, enPassant, castling };
 
 struct Location
 {
@@ -35,6 +35,7 @@ public:
     [[nodiscard]] const std::string& getPieceStr() const { return pieceStr; }
     [[nodiscard]] auto getColor() const { return color; }
 
+    void setLocation(unsigned short x, unsigned short y) { location = {x, y}; }
     [[nodiscard]] const auto& getLocation() const { return location; }
     [[nodiscard]] virtual const std::vector<Move>& getLegalMoves() { return legalMoves; }
     virtual void move(const Move& move);

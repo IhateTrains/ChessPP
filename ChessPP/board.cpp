@@ -61,6 +61,10 @@ void Board::initialize()
     } };
 
     loadPlacementFromArray(initialPlecement);
+
+    for (auto& row : gameDataVec[0].untouchedSquares) // mark all squares as untouched
+        for (auto& untouched : row)
+            untouched = true;
 }
 void Board::loadPlacementFromArray(const std::array<std::array<std::string, 8>, 8>& array)
 {
@@ -172,15 +176,15 @@ void Board::squareClicked(ClickableSquare* ptr)
     case BoardState::defaultState:
         if (ptr->containsPiece() && ptr->getPiece()->getColor() == movingPlayerColor)
         {
-            ptr->setStyle(ZAZNACZONY);
+            ptr->setStyle(SELECTED);
             movingPieceLocation = ptr->getPiece()->getLocation();
             state = BoardState::srcSelected;
 
             // display legal moves
             for (const auto& move : ptr->getPiece()->getLegalMoves())
             {
-                if (move.moveType == MoveType::onlyMove) getSquare(move.destPos.x, move.destPos.y)->setStyle(MOZLIWY_RUCH);
-                else if (move.moveType == MoveType::onlyCapture || move.moveType == MoveType::enPassant) getSquare(move.destPos.x, move.destPos.y)->setStyle(BITY);
+                if (move.moveType == MoveType::simplePush || move.moveType == MoveType::castling) getSquare(move.destPos.x, move.destPos.y)->setStyle(POSSIBLE_PUSH);
+                else if (move.moveType == MoveType::simpleCapture || move.moveType == MoveType::enPassant) getSquare(move.destPos.x, move.destPos.y)->setStyle(POSSIBLE_CAPTURE);
 
                 moveCache[move.destPos.y][move.destPos.x] = move;
             }
@@ -189,25 +193,25 @@ void Board::squareClicked(ClickableSquare* ptr)
     case BoardState::srcSelected:
         if (ptr->containsPiece())
         {
-            if (ptr->getStyle() == ZAZNACZONY) // undo selection without making a move
+            if (ptr->getStyle() == SELECTED) // undo selection without making a move
             {
                 state = BoardState::defaultState;
                 refresh();
             }
-            else if (ptr->getStyle() == BITY) // capture
+            else if (ptr->getStyle() == POSSIBLE_CAPTURE) // capture
             {
                 const auto& [x, y] = ptr->getLocation();
                 makeMove(moveCache[y][x]);
                 refresh();
             }
         }
-        else if (ptr->getStyle() == BITY) // en passant
+        else if (ptr->getStyle() == POSSIBLE_CAPTURE) // en passant
         {
             const auto& [x, y] = ptr->getLocation();
             makeMove(moveCache[y][x]);
             refresh();
         }
-        else if (ptr->getStyle() == MOZLIWY_RUCH) // push
+        else if (ptr->getStyle() == POSSIBLE_PUSH) // push
         {
             const auto& [x, y] = ptr->getLocation();
             makeMove(moveCache[y][x]);
@@ -295,6 +299,11 @@ bool Board::isEnpassantPossible(unsigned short x, unsigned short y)
     return false;
 }
 
+bool Board::isSquareUntouched(unsigned short x, unsigned short y)
+{
+    return gameDataVec.back().untouchedSquares[y][x];
+}
+
 
 void Board::generateMoves()
 {
@@ -327,8 +336,9 @@ void Board::generateMoves()
                 for (const auto& move : moves)
                     switch (move.moveType)
                     {
-                    case MoveType::onlyMove: { movesMap[color].push_back(move); break; }
-                    case MoveType::onlyCapture: { capturesMap[color].push_back(move); break; }
+                    case MoveType::simplePush: { movesMap[color].push_back(move); break; }
+                    case MoveType::castling: { movesMap[color].push_back(move); break; }
+                    case MoveType::simpleCapture: { capturesMap[color].push_back(move); break; }
                     case MoveType::enPassant: { capturesMap[color].push_back(move); break; }
                     }
 
@@ -347,8 +357,9 @@ void Board::generateMoves()
         for (const auto& move : moves)
             switch (move.moveType)
             {
-            case MoveType::onlyMove: { movesMap[color].push_back(move); break; }
-            case MoveType::onlyCapture: { capturesMap[color].push_back(move); break; }
+            case MoveType::simplePush: { movesMap[color].push_back(move); break; }
+            case MoveType::castling: { movesMap[color].push_back(move); break; }
+            case MoveType::simpleCapture: { capturesMap[color].push_back(move); break; }
             case MoveType::enPassant: { capturesMap[color].push_back(move); break; }
             }
     }

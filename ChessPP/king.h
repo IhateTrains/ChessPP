@@ -23,6 +23,8 @@ public:
 
     [[nodiscard]] bool isKing() { return true; }
 
+    void move(const Move& move);
+
 private:
     void generateLegalMovesAndKingDangers();
 };

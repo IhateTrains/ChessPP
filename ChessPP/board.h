@@ -22,6 +22,7 @@ enum class BoardState { defaultState, srcSelected };
 struct GameData {
     unsigned short movesSinceLastLongPawnMove;
     Move lastMove;
+    std::array<std::array<bool, 8>, 8> untouchedSquares;
 };
 
 class Board : public QObject
@@ -39,6 +40,7 @@ public:
     [[nodiscard]] const auto& getEnemyCaptures(const PieceColor playerColor) const;
     [[nodiscard]] bool isKingDangerSquare(const unsigned short x, const unsigned short y, const PieceColor kingColor) const;
     [[nodiscard]] bool isEnpassantPossible(unsigned short x, unsigned short y);
+    [[nodiscard]] bool isSquareUntouched(unsigned short x, unsigned short y);
 
     void promotePawn(unsigned short x, unsigned short y);
 
