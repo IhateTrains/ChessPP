@@ -76,8 +76,6 @@ private:
 
     BoardState state = BoardState::defaultState;
     PieceColor movingPlayerColor = PieceColor::white;
-    Location movingPieceLocation;
-
 
     std::map<PieceColor, std::vector<Move>> movesMap { { PieceColor::black, std::vector<Move>{} }, { PieceColor::white, std::vector<Move>{} } };
     std::map<PieceColor, std::vector<Move>> capturesMap { { PieceColor::black, std::vector<Move>{} }, { PieceColor::white, std::vector<Move>{} } };

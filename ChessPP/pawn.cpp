@@ -8,6 +8,11 @@ const std::string Pawn::getImagePath() const
     else return ":/images/PawnW.png";
 }
 
+bool Pawn::isLongMovePossible() const
+{
+    return board->isSquareUntouched(location.x, location.y);
+}
+
 
 const std::vector<Move>& Pawn::getLegalMoves()
 {
@@ -35,7 +40,7 @@ void Pawn::generateLegalMovesAndKingDangers()
                 addLegalMove(location.x, location.y+1, MoveType::simplePush);
 
             // first move can be a long move
-            if (firstMove && location.y+2 < 8 && !board->getSquare(location.x, location.y+1)->containsPiece() && !board->getSquare(location.x, location.y+2)->containsPiece())
+            if (isLongMovePossible() && location.y+2 < 8 && !board->getSquare(location.x, location.y+1)->containsPiece() && !board->getSquare(location.x, location.y+2)->containsPiece())
             {
                 addLegalMove(location.x, location.y+2, MoveType::simplePush);
             }
@@ -86,7 +91,7 @@ void Pawn::generateLegalMovesAndKingDangers()
                 addLegalMove(location.x, location.y-1, MoveType::simplePush);
 
             // first move can be a long move
-            if (firstMove && location.y-2 >= 0 && !board->getSquare(location.x, location.y-1)->containsPiece() && !board->getSquare(location.x, location.y-2)->containsPiece())
+            if (isLongMovePossible() && location.y-2 >= 0 && !board->getSquare(location.x, location.y-1)->containsPiece() && !board->getSquare(location.x, location.y-2)->containsPiece())
             {
                 addLegalMove(location.x, location.y-2, MoveType::simplePush);
             }
@@ -151,6 +156,5 @@ void Pawn::move(const Move& move)
         }
     }
 
-    firstMove = false;
     board->gameDataVec.back().movesSinceLastLongPawnMove = 0;
 }

@@ -177,7 +177,6 @@ void Board::squareClicked(ClickableSquare* ptr)
         if (ptr->containsPiece() && ptr->getPiece()->getColor() == movingPlayerColor)
         {
             ptr->setStyle(SELECTED);
-            movingPieceLocation = ptr->getPiece()->getLocation();
             state = BoardState::srcSelected;
 
             // display legal moves

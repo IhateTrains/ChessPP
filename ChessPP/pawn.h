@@ -16,7 +16,7 @@ public:
     };
 
     [[nodiscard]] const std::string getImagePath() const;
-    [[nodiscard]] bool isLongMovePossible() const { return firstMove; }
+    [[nodiscard]] bool isLongMovePossible() const;
 
     [[nodiscard]] const std::vector<Move>& getLegalMoves();
     [[nodiscard]] const std::vector<Location>& getKingDangerSquarePositions();
@@ -26,7 +26,6 @@ public:
     void move(const Move& move);
 
 private:
-    bool firstMove = true;
     void generateLegalMovesAndKingDangers();
 };
 
