@@ -10,6 +10,12 @@ Piece::Piece(unsigned short x, unsigned short y, PieceColor color, std::shared_p
 
 void Piece::move(const Move& move)
 {
+    std::shared_ptr<Piece> capturedPiece = nullptr;
+    if (move.moveType == MoveType::simpleCapture)
+    {
+        capturedPiece = board->getSquare(move.destPos)->getPiece();
+    }
+
     const auto& piecePtr = board->getSquare(location)->getPiece();
     board->getSquare(move.destPos)->setPiece(piecePtr);
     board->getSquare(location)->setPiece(nullptr);
@@ -26,6 +32,7 @@ void Piece::move(const Move& move)
     board->gameDataVec.back().untouchedSquares[location.y][location.x] = false;
     board->gameDataVec.back().untouchedSquares[move.startPos.y][move.startPos.x] = false;
 
+    board->gameDataVec.back().lastCapturedPiece = capturedPiece;
 }
 
 

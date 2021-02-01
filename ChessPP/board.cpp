@@ -376,6 +376,56 @@ void Board::makeMove(const Move& move)
     changeMovingPlayerColor();
 }
 
+void Board::undoMove()
+{
+    const auto& data = gameDataVec.back();
+    const auto& move = data.lastMove;
+
+    // undo promotion
+    if (data.promotion == true)
+    {
+        const auto piece = std::make_shared<Pawn>(move.destPos.x, move.destPos.y, getSquare(move.destPos.x, move.destPos.y)->getPiece()->getColor(), sharedBoardPtr);
+        getSquare(move.destPos.x, move.destPos.y)->setPiece(piece);
+    }
+
+    // undo en passant
+    else if (move.moveType == MoveType::enPassant)
+    {
+        Location capturedPiecePos = { move.destPos.x, move.startPos.y };
+        getSquare(capturedPiecePos)->setPiece(data.lastCapturedPiece);
+    }
+
+    // move the piece back from destPos to startPos (and restore captured piece if the move was simpleCapture)
+    auto& piece = getSquare(move.destPos)->getPiece();
+    getSquare(move.startPos)->setPiece(piece);
+    if (move.moveType == MoveType::simpleCapture)
+        getSquare(move.destPos)->setPiece(data.lastCapturedPiece);
+    else
+        getSquare(move.destPos)->setPiece(nullptr);
+    piece->setLocation(move.startPos.x, move.startPos.y);
+
+    // undo castling
+    if (move.moveType == MoveType::castling)
+    {
+        if (move.destPos.x==2)
+        {
+            auto& rook = getSquare(3, move.destPos.y)->getPiece();
+            getSquare(0, move.destPos.y)->setPiece(rook);
+            getSquare(3, move.destPos.y)->setPiece(nullptr);
+            rook->setLocation(0, move.destPos.y);
+        }
+        else
+        {
+            auto& rook = getSquare(5, move.destPos.y)->getPiece();
+            getSquare(7, move.destPos.y)->setPiece(rook);
+            getSquare(5, move.destPos.y)->setPiece(nullptr);
+            rook->setLocation(7, move.destPos.y);
+        }
+    }
+
+    gameDataVec.pop_back();
+}
+
 void Board::makeAiMove()
 {
     // prefer captures over pushes
@@ -413,4 +463,6 @@ void Board::promotePawn(unsigned short x, unsigned short y)
     }
 
     square->setPiece(newPiece);
+
+    gameDataVec.back().promotion = true;
 }

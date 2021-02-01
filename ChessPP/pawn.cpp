@@ -148,10 +148,12 @@ void Pawn::move(const Move& move)
     {
         if (color==PieceColor::white)
         {
+            board->gameDataVec.back().lastCapturedPiece = board->getSquare(x, y-1)->getPiece();
             board->getSquare(x, y-1)->setPiece(nullptr);
         }
         else
         {
+            board->gameDataVec.back().lastCapturedPiece = board->getSquare(x, y+1)->getPiece();
             board->getSquare(x, y+1)->setPiece(nullptr);
         }
     }

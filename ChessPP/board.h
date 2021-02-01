@@ -23,6 +23,8 @@ struct GameData {
     unsigned short movesSinceLastLongPawnMove;
     Move lastMove;
     std::array<std::array<bool, 8>, 8> untouchedSquares;
+    bool promotion = false;
+    std::shared_ptr<Piece> lastCapturedPiece;
 };
 
 class Board : public QObject
@@ -60,7 +62,7 @@ private:
 
     void generateMoves();
     void makeMove(const Move& move);
-    //void unMove();
+    void undoMove();
     void makeAiMove();
 
     void loadPlacementFromArray(const std::array<std::array<std::string, 8>, 8>& array);
